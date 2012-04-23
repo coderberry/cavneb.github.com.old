@@ -1,0 +1,251 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Creating Custom SOAP Requests with Ruby and Net::HTTP - coderberry.me</title>
+    <meta name="author" content="Eric Berry">
+
+    
+    <meta name="description" content="Creating Custom SOAP Requests With Ruby and Net::HTTP I interviewed at a company a while ago and one of the questions they asked me was the familiar &hellip;">
+    
+    <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
+
+    <link href="/atom.xml" rel="alternate" title="coderberry.me" type="application/atom+xml">
+    <link rel="canonical" href="">
+    <link href="/favicon.png" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-26417518-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+	<header class="inner"><h1 class="left"><a href="/">coderberry.me</a></h1>
+<nav class="menu left"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<div class="right">
+	<form class="search right" action="http://google.com/search" method="get">
+		<input class="left" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:coderberry.me">
+	</form>
+	<div class="social right">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/cavneb" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/cavneb" title="GitHub">GitHub</a>
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</div>
+
+</header>
+	
+<div id="banner" class="inner">
+	<div class="container">
+		<ul class="feed"></ul>
+	</div>
+	<small><a href="http://twitter.com/cavneb">cavneb</a> @ <a href="http://twitter.com">Twitter</a></small>
+	<div class="loading">Loading...</div>
+</div>
+<script src="/javascripts/twitter.js"></script>
+<script type="text/javascript">
+	(function($){
+		$('#banner').getTwitterFeed('cavneb', 4, false);
+	})(jQuery);
+</script>
+
+	<div id="content" class="inner"><article class="post">
+    <h1 class="title">Creating Custom SOAP Requests With Ruby and Net::HTTP</h1>
+    <div class="entry"><p><img src="/images/posts/golf_scale.jpg"></p>
+
+<p>I interviewed at a company a while ago and one of the questions they asked me was the familiar &#8220;You have 8 golf balls and a justice scale. One of the golf balls has a bubble in it making it a tiny bit lighter, but you can&#8217;t tell by looking at it or holding it. How many times do you need to use the scale in order to find the defective ball?&#8221;. I left the interview thinking that the answer was 3. After about 3 hours of thinking about it, I realized that the answer was 2 tries.</p>
+
+<p>The reason I share this with you is because today I found the answer to something that I&#8217;ve been thinking about for much longer than 3 hours. For about 1 1/2 years, I have been trying to find a good way to simply post a SOAP request via ruby without having to use SOAP4r or WSDL&#8217;s. Some of you might find this a bit odd that it took me this long to figure this out, but then again, it&#8217;s almost impossible to find any examples of this online.</p>
+
+<p>Enough history. Let&#8217;s get to the code.</p>
+
+<p>In my book, <a href="http://www.amazon.com/gp/product/0596520700?ie=UTF8&amp;tag=kobu-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596520700">Rails Pocket Reference</a>, I have a section about using SOAP. In the example, I used the soap/wsdlDriver library to parse a WSDL from GeoCoder.us, a free US address geocoder tool. Instead of using the WSDL, you can access the response directly.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;net/https&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Create te http object</span>
+</span><span class='line'><span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;rpc.geocoder.us&#39;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+</span><span class='line'><span class="n">http</span><span class="o">.</span><span class="n">use_ssl</span> <span class="o">=</span> <span class="kp">false</span>
+</span><span class='line'><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/service/soap/&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Create the SOAP Envelope</span>
+</span><span class='line'><span class="n">data</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">EOF</span>
+</span><span class='line'><span class="sh">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="sh">&lt;SOAP-ENV:Envelope</span>
+</span><span class='line'><span class="sh">  xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
+</span><span class='line'><span class="sh">  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+</span><span class='line'><span class="sh">  xmlns:SOAP-ENC=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot;</span>
+</span><span class='line'><span class="sh">  SOAP-ENV:encodingStyle=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot;</span>
+</span><span class='line'><span class="sh">  xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;</span>
+</span><span class='line'><span class="sh">  &lt;SOAP-ENV:Body&gt;</span>
+</span><span class='line'><span class="sh">    &lt;m:geocode xmlns:m=&quot;http://rpc.geocoder.us/Geo/Coder/US/&quot;&gt;</span>
+</span><span class='line'><span class="sh">      &lt;location xsi:type=&quot;xsd:string&quot;&gt;1005 Gravenstein Highway North Sebastopol, CA 95472&lt;/location&gt;</span>
+</span><span class='line'><span class="sh">    &lt;/m:geocode&gt;</span>
+</span><span class='line'><span class="sh">  &lt;/SOAP-ENV:Body&gt;</span>
+</span><span class='line'><span class="sh">&lt;/SOAP-ENV:Envelope&gt;</span>
+</span><span class='line'><span class="no">EOF</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Set Headers</span>
+</span><span class='line'><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s1">&#39;Referer&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;http://www.appfusion.net&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/xml&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="s1">&#39;Host&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;rpc.geocoder.us&#39;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Post the request</span>
+</span><span class='line'><span class="n">resp</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># Output the results</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Code = &#39;</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">code</span>
+</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Message = &#39;</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">message</span>
+</span><span class='line'><span class="n">resp</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39; = &#39;</span> <span class="o">+</span> <span class="n">val</span> <span class="p">}</span>
+</span><span class='line'><span class="nb">puts</span> <span class="n">data</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I hope this makes using SOAP with Ruby a lot less cryptic for other as it does me.</p>
+</div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-19T00:00:00-07:00" pubdate data-updated="true">Dec 19<span>th</span>, 2008</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</div>
+
+</div>
+        
+        <span class="comments"><a href="#disqus_thread">Comments</a></span>
+        
+    </div>
+</article>
+<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer class="inner">Copyright &copy; 2012 coderberry.me</footer>
+	<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script src="/javascripts/slash.js"></script>
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'coderberry';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http/';
+        var disqus_url = 'http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+</body>
+</html>

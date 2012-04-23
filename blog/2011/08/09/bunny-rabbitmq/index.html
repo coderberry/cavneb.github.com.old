@@ -1,0 +1,352 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bunny RabbitMQ - coderberry.me</title>
+    <meta name="author" content="Eric Berry">
+
+    
+    <meta name="description" content="Bunny RabbitMQ Recently I was asked to implement Redis/Resque into an existing project that already had Redis up and running with another Redis &hellip;">
+    
+    <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
+
+    <link href="/atom.xml" rel="alternate" title="coderberry.me" type="application/atom+xml">
+    <link rel="canonical" href="">
+    <link href="/favicon.png" rel="shortcut icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    
+    
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-26417518-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body>
+	<header class="inner"><h1 class="left"><a href="/">coderberry.me</a></h1>
+<nav class="menu left"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<div class="right">
+	<form class="search right" action="http://google.com/search" method="get">
+		<input class="left" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:coderberry.me">
+	</form>
+	<div class="social right">
+		
+		
+		
+		<a class="twitter" href="http://twitter.com/cavneb" title="Twitter">Twitter</a>
+		
+		
+		<a class="github" href="https://github.com/cavneb" title="GitHub">GitHub</a>
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</div>
+
+</header>
+	
+<div id="banner" class="inner">
+	<div class="container">
+		<ul class="feed"></ul>
+	</div>
+	<small><a href="http://twitter.com/cavneb">cavneb</a> @ <a href="http://twitter.com">Twitter</a></small>
+	<div class="loading">Loading...</div>
+</div>
+<script src="/javascripts/twitter.js"></script>
+<script type="text/javascript">
+	(function($){
+		$('#banner').getTwitterFeed('cavneb', 4, false);
+	})(jQuery);
+</script>
+
+	<div id="content" class="inner"><article class="post">
+    <h1 class="title">Bunny RabbitMQ</h1>
+    <div class="entry"><p><img src="/images/posts/crazy-rabbit.jpg"></p>
+
+<p>Recently I was asked to implement <a href="https://github.com/defunkt/resque">Redis/Resque</a> into an existing project that already had Redis up and running with another Redis server. This ended up being a lot more difficult than I had anticipated due to the <a href="https://github.com/defunkt/resque/blob/master/lib/resque.rb">singleton nature</a> of the Resque gem. This led us to explore other possible options and we ended up on <a href="http://www.rabbitmq.com/">RabbitMQ</a>.</p>
+
+<p>RabbitMQ has two heavily supported gems that can be used to interface with our Rails app. One of them is the <a href="http://rubydoc.info/github/ruby-amqp/amqp/master/file/docs/AMQP091ModelExplained.textile">AMQP gem</a>. It is very powerful and acts as a daemon for both publisher and consumer. Our needs aren&#8217;t as big, however, so we decided to use the <a href="https://github.com/celldee/bunny">bunny gem</a>.</p>
+
+<p>Initially, I started off by wanting to create a publisher/consumer scenario. I installed RabbitMQ on a <a href="http://www.virtualbox.org/">VirtualBox</a> using <a href="http://vagrantup.com/">Vagrant</a>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gem install vagrant # See vangrantup.com for install instructions
+</span><span class='line'>$ vagrant box add base http://files.vagrantup.com/lucid32.box
+</span><span class='line'>$ vagrant init</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Make sure you modify your Vagrantfile to allow port access for the tcp protocol:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">forward_port</span> <span class="s2">&quot;tcp&quot;</span><span class="p">,</span> <span class="mi">5672</span><span class="p">,</span> <span class="mi">5672</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then I started up the server, logged in and installed the RabbitMQ server:</p>
+
+<pre><code>$ vagrant up
+$ vagrant ssh
+vagrant@lucid32:~$ sudo apt-get install rabbitmq-server
+...
+</code></pre>
+
+<p>Once this is done, the RabbitMQ server starts automatically. To ensure that it&#8217;s working you can run the following command. Remember to run it as sudo.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">vagrant</span><span class="vi">@lucid32</span><span class="ss">:~</span><span class="err">$</span> <span class="n">sudo</span> <span class="n">rabbitmqctl</span> <span class="n">list_queues</span>
+</span><span class='line'><span class="no">Listing</span> <span class="n">queues</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">done</span><span class="o">.</span>
+</span><span class='line'><span class="n">vagrant</span><span class="vi">@lucid32</span><span class="ss">:~</span><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now that this works, let&#8217;s play with the gem. Ensure that you have the bunny gem installed.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">gem</span> <span class="n">install</span> <span class="n">bunny</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once this is installed, start up a console and we will create a queue.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">irb</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;bunny&#39;</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_client</span> <span class="o">=</span> <span class="no">Bunny</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="c1">#&lt;Bunny::Client:0x1095a..., @port=5672&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_client</span><span class="o">.</span><span class="n">start</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="ss">:connected</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_queue</span> <span class="o">=</span> <span class="n">my_client</span><span class="o">.</span><span class="n">queue</span><span class="p">(</span><span class="s1">&#39;my_first_queue&#39;</span><span class="p">)</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="c1">#&lt;Bunny::Queue:0x1063v..., @port=5672&gt;&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we have a queue created. Let&#8217;s go back to our RabbitMQ server and run the list_queues command again.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">vagrant</span><span class="vi">@lucid32</span><span class="ss">:~</span><span class="err">$</span> <span class="n">sudo</span> <span class="n">rabbitmqctl</span> <span class="n">list_queues</span>
+</span><span class='line'><span class="no">Listing</span> <span class="n">queues</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="n">my_first_queue</span>  <span class="mi">0</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">done</span><span class="o">.</span>
+</span><span class='line'><span class="n">vagrant</span><span class="vi">@lucid32</span><span class="ss">:~</span><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, we now have the <em>my_first_queue</em> queue created with 0 items in the queue.</p>
+
+<p>Let&#8217;s now add a message to the queue.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&gt;</span> <span class="n">direct_exchange</span> <span class="o">=</span> <span class="n">my_client</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">direct_exchange</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s1">&#39;This is my first message&#39;</span><span class="p">,</span> <span class="ss">:key</span> <span class="o">=&gt;</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="kp">nil</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">message_count</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And now when you run the <em>list_queues</em> command, you will see it has a <strong>1</strong> after the <em>my_first_queue</em>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">vagrant</span><span class="vi">@lucid32</span><span class="ss">:~</span><span class="err">$</span> <span class="n">sudo</span> <span class="n">rabbitmqctl</span> <span class="n">list_queues</span>
+</span><span class='line'><span class="no">Listing</span> <span class="n">queues</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="n">my_first_queue</span>  <span class="mi">1</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">done</span><span class="o">.</span>
+</span><span class='line'><span class="n">vagrant</span><span class="vi">@lucid32</span><span class="ss">:~</span><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Awesome. Now that we know how to add messages into our RabbitMQ server using the bunny gem, let&#8217;s now create a consumer to read the messages from the queue.</p>
+
+<p>Let&#8217;s open up another terminal and run irb. This part will be the same as before.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="err">$</span> <span class="n">irb</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;bunny&#39;</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="kp">true</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_client</span> <span class="o">=</span> <span class="no">Bunny</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="c1">#&lt;Bunny::Client:0x1095a..., @port=5672&gt;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_client</span><span class="o">.</span><span class="n">start</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="ss">:connected</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_queue</span> <span class="o">=</span> <span class="n">my_client</span><span class="o">.</span><span class="n">queue</span><span class="p">(</span><span class="s1">&#39;my_first_queue&#39;</span><span class="p">)</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="c1">#&lt;Bunny::Queue:0x1063v..., @port=5672&gt;&gt;</span>
+</span><span class='line'> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">message_count</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To grab the next item in the queue, we would call <em>pop</em> on <em>my_queue</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&gt;</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">pop</span><span class="o">[</span><span class="ss">:payload</span><span class="o">]</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="s2">&quot;This is a test message&quot;</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">message_count</span>
+</span><span class='line'> <span class="o">=&gt;</span> <span class="mi">0</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If we want it to run as a listener, we can place the <em>pop</em> in a loop.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">&gt;</span> <span class="kp">loop</span> <span class="k">do</span>
+</span><span class='line'><span class="o">&gt;</span>   <span class="k">if</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">message_count</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</span><span class='line'><span class="o">&gt;</span>     <span class="n">msg</span> <span class="o">=</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">pop</span><span class="o">[</span><span class="ss">:payload</span><span class="o">]</span>
+</span><span class='line'><span class="o">&gt;</span>     <span class="nb">puts</span> <span class="s2">&quot;Found Message: </span><span class="si">#{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="o">&gt;</span>   <span class="k">else</span>
+</span><span class='line'><span class="o">&gt;</span>     <span class="nb">sleep</span> <span class="mi">5</span>
+</span><span class='line'><span class="o">&gt;</span>   <span class="k">end</span>
+</span><span class='line'><span class="o">&gt;</span> <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There you have it!</p>
+</div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-09T00:00:00-06:00" pubdate data-updated="true">Aug 9<span>th</span>, 2011</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/rabbitmq/'>RabbitMQ</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</div>
+
+</div>
+        
+        <span class="comments"><a href="#disqus_thread">Comments</a></span>
+        
+    </div>
+</article>
+<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer class="inner">Copyright &copy; 2012 coderberry.me</footer>
+	<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script src="/javascripts/slash.js"></script>
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'coderberry';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coderberry.me/blog/2011/08/09/bunny-rabbitmq/';
+        var disqus_url = 'http://coderberry.me/blog/2011/08/09/bunny-rabbitmq/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+</body>
+</html>

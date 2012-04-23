@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Security | coderberry.me]]></title>
+  <link href="http://coderberry.me/blog/categories/security/atom.xml" rel="self"/>
+  <link href="http://coderberry.me/"/>
+  <updated>2012-04-23T13:41:18-06:00</updated>
+  <id>http://coderberry.me/</id>
+  <author>
+    <name><![CDATA[Eric Berry]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Roll your own Ajax-Based Captcha in Grails]]></title>
+    <link href="http://coderberry.me/blog/2010/10/28/roll-your-own-ajax-based-captcha-in-grails/"/>
+    <updated>2010-10-28T00:00:00-06:00</updated>
+    <id>http://coderberry.me/blog/2010/10/28/roll-your-own-ajax-based-captcha-in-grails</id>
+    <content type="html"><![CDATA[<p>Recently, I was asked to come up with a better solution to our
+captcha needs. We have been using <a href="http://www.google.com/recaptcha">ReCaptcha</a>, which is great
+but difficult to read at times, and has caused frustrated
+customers and lost sales. I found a great solution at
+<a href="http://www.jkdesign.org/captcha">http://www.jkdesign.org/captcha</a> which displays a number of
+graphics and let's the user choose the right one to prove they
+are human. Here is a screenshot of my implementation:</p>
+
+<p><img src="/images/posts/Using-Criteria-Builder-with-Projections-1.png"></p>
+
+<p>To make this work within Grails, I had to make several tweaks. The following files are required:</p>
+
+<ul>
+<li><a href="http://jqueryui.com/">JQuery 1.2+</a> (I am using version - 1.4.2)</li>
+<li><a href="http://jqueryui.com/">JQuery UI</a> (I am using version - 1.8.2)</li>
+<li><a href="http://gist.github.com/651605">jquery.simpleCaptcha-0.2.js</a></li>
+<li><a href="/files/captchaImages.zip">Captcha Images</a> placed in images/captchaImages</li>
+<li><a href="http://gist.github.com/651613">BCrypt.java</a> by Damien Miller</li>
+<li>CaptchaController.groovy (below)</li>
+</ul>
+
+
+<p>Create a new controller called Captcha. This can really be named anything, but if you do rename it, it will have to be updated in the jquery.simpleCaptcha-0.2.js file or passed in as an option via the javascript.</p>
+
+<p><div><script src='https://gist.github.com/1291660.js?file='></script>
+<noscript><pre><code>package com.berry
+
+import com.berry.BCrypt
+import grails.converters.JSON
+
+class CaptchaController {
+
+    def index = {
+
+        // Generate the SALT to be used for encryption and place in session
+        def captchaSalt = session.captchaSalt ?: BCrypt.gensalt()
+        session.selectedCaptchaText = null
+        session.captchaSalt = captchaSalt
+
+        // Modify below for custom images
+        def images = [
+                'house':        'images/captchaImages/01.png',
+                'key':          'images/captchaImages/04.png',
+                'flag':         'images/captchaImages/06.png',
+                'clock':        'images/captchaImages/15.png',
+                'bug':          'images/captchaImages/16.png',
+                'pen':          'images/captchaImages/19.png',
+                'light bulb':   'images/captchaImages/21.png',
+                'musical note': 'images/captchaImages/40.png',
+                'heart':        'images/captchaImages/43.png',
+                'world':        'images/captchaImages/99.png'
+        ]
+
+        // Create the image array to be returned in JSON format
+        def size = images.size()
+        def num = Math.min(params.numImages ? params.int('numImages') : 5, size)
+        def keys = images.keySet().toList()
+        def used = []
+        def random = new Random()
+        (1..num).each { i -&gt;
+            def idx = random.nextInt(keys.size())
+            def item = keys.get(idx)
+            keys.remove(idx)
+            used &lt;&lt; item
+        }
+
+        // Select the 'chosen' text to be used for authentication and place in session
+        def selectedText = used[random.nextInt(used.size())]
+        def hashedSelectedText = BCrypt.hashpw(selectedText, captchaSalt);
+        session.selectedCaptchaText = hashedSelectedText
+
+//        println &quot;SELECTED: ${hashedSelectedText}&quot;
+//        println &quot;USED: ${used.inspect()}&quot;
+
+        // Generate object to be returned
+        def ret = [
+                text: selectedText,
+                images: []
+        ]
+        used.each { u -&gt;
+            ret['images'] &lt;&lt; [hash: BCrypt.hashpw(u, captchaSalt), file: images[u]]
+        }
+
+        render ret as JSON
+    }
+}</code></pre></noscript></div>
+</p>
+
+<p>What this controller does is return a JSON object with the data needed to generate the captcha. The JSON appears like so:</p>
+
+<p><div><script src='https://gist.github.com/1291662.js?file='></script>
+<noscript><pre><code>{
+	&quot;text&quot;:&quot;heart&quot;,
+	&quot;images&quot;:[
+	  {
+	    &quot;hash&quot;:&quot;$2a$10$GTcG7U1rt7XFBi4JVImT2Oo.E3D8FCzha2772XuXm7v28Kx2LNL5S&quot;,
+	    &quot;file&quot;:&quot;images/captchaImages/99.png&quot;
+	  },
+	  {
+	    &quot;hash&quot;:&quot;$2a$10$GTcG7U1rt7XFBi4JVImT2Oa5Y/I/cXOUj30kffPqyX0qxTnAACX6O&quot;,
+	    &quot;file&quot;:&quot;images/captchaImages/43.png&quot;
+	  },
+	  {
+	    &quot;hash&quot;:&quot;$2a$10$GTcG7U1rt7XFBi4JVImT2O8zeOa4.ed1s8pZS9AgkalcSSQm9pmbi&quot;,
+	    &quot;file&quot;:&quot;images/captchaImages/15.png&quot;
+	  },
+	  {
+	    &quot;hash&quot;:&quot;$2a$10$GTcG7U1rt7XFBi4JVImT2OSNYwC4RPwhNpuPYBbeNB0j4ozoItwDK&quot;,
+	    &quot;file&quot;:&quot;images/captchaImages/06.png&quot;
+	  },
+	  {
+	    &quot;hash&quot;:&quot;$2a$10$GTcG7U1rt7XFBi4JVImT2OLv6DzHHDX0aB2AwS1YEVZMp9cEpo2sq&quot;,
+	    &quot;file&quot;:&quot;images/captchaImages/01.png&quot;
+	  }
+	]
+}</code></pre></noscript></div>
+</p>
+
+<p>Now we just need to implement this in our GSP file and controller. Suppose we have a page like shown above with a pickup code and the last 4 digits of the persons phone number. With adding our captcha div and required javascript, our GSP would look like this:</p>
+
+<p><div><script src='https://gist.github.com/1291664.js?file='></script>
+<noscript><pre><code>&lt;!-- PLACE IN HEADER --&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;${resource(dir:'js',file:'jquery.simpleCaptcha-0.2.js')}&quot;&gt;&lt;/script&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+    img.simpleCaptcha {
+        margin: 2px !important;
+        cursor: pointer;
+    }
+    img.simpleCaptchaSelected {
+        margin-bottom: 0px;
+        border-bottom: 2px solid red;
+    }
+&lt;/style&gt;
+
+&lt;!-- BODY CONTENTS --&gt;
+&lt;g:form action=&quot;pickup&quot;&gt;
+
+    &lt;div class=&quot;stylized myform&quot; style=&quot;width:542px;&quot;&gt;
+        &lt;h2&gt;Your pickup code will be given to you by your loan consultant&lt;/h2&gt;
+
+        &lt;g:if test=&quot;${flash.message}&quot;&gt;
+            &lt;div class=&quot;error&quot;&gt;
+                ${flash.message}
+            &lt;/div&gt;
+        &lt;/g:if&gt;
+
+        &lt;div class=&quot;clearfix formField&quot;&gt;
+            &lt;label class=&quot;label_only&quot;&gt;Pickup Code&lt;/label&gt;
+            &lt;g:textField name=&quot;pickupCode&quot; value=&quot;${pickupCode}&quot; autocomplete=&quot;no&quot; class=&quot;text&quot; /&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;clearfix formField&quot;&gt;
+            &lt;label class=&quot;label_only&quot;&gt;Last 4 Digits of Phone&lt;/label&gt;
+            &lt;span class=&quot;after_checkbox&quot; style=&quot;padding-right: 0px;&quot;&gt;(XXX) XXX-&lt;/span&gt;
+            &lt;g:textField name=&quot;lastFourDigits&quot; value=&quot;${lastFourDigits}&quot; autocomplete=&quot;no&quot; class=&quot;text&quot; maxLength=&quot;4&quot; /&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;clearfix formField&quot;&gt;
+            &lt;label class=&quot;label_only&quot;&gt;Are You Human?&lt;/label&gt;
+            &lt;div style=&quot;float: left; margin-left: 10px;&quot;&gt;
+              &lt;!-- Begin Captcha --&gt;
+                &lt;div id=&quot;captcha&quot;&gt;&lt;/div&gt;
+              &lt;!-- End Captcha --&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;clearfix&quot; style=&quot;margin-top: 15px;&quot;&gt;
+            &lt;label class=&quot;label_only&quot;&gt;&amp;nbsp;&lt;/label&gt;
+            &lt;g:submitButton name=&quot;submit&quot; value=&quot;Show Me My Offer&quot; class=&quot;button&quot; /&gt;
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+
+&lt;/g:form&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+    $(document).ready(function() {
+        $('#captcha').simpleCaptcha({
+            numImages: 5,
+            introText: '&lt;p&gt;Are you human? Then pick out the &lt;strong class=&quot;captchaText&quot;&gt;&lt;/strong&gt;&lt;/p&gt;'
+        });
+    });
+&lt;/script&gt;</code></pre></noscript></div>
+</p>
+
+<p>Finally, we need to perform the validation on the controller side. The modified authentication action would look like the following:</p>
+
+<p>``` java
+def pickup = {</p>
+
+<pre><code>// Determine if the captcha is picked correctly
+if (params.captchaSelection != session.selectedCaptchaText) {
+
+  // They selected the correct Captcha image. Continue with Authentication
+
+} else {
+    flash.message = "You did not click the correct image below. Please Try Again."   
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>So there ya go. It's actually pretty easy and customers seem to like choosing an image much more than typing a word that is difficult to read.</p>
+]]></content>
+  </entry>
+  
+</feed>

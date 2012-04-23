@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rails | coderberry.me]]></title>
+  <link href="http://coderberry.me/blog/categories/rails/atom.xml" rel="self"/>
+  <link href="http://coderberry.me/"/>
+  <updated>2012-04-23T13:41:18-06:00</updated>
+  <id>http://coderberry.me/</id>
+  <author>
+    <name><![CDATA[Eric Berry]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using multiple SMTP accounts with Rails &amp; ActionMailer]]></title>
+    <link href="http://coderberry.me/blog/2009/03/30/using-multiple-smtp-accounts-with-rails-and-actionmailer/"/>
+    <updated>2009-03-30T00:00:00-06:00</updated>
+    <id>http://coderberry.me/blog/2009/03/30/using-multiple-smtp-accounts-with-rails-and-actionmailer</id>
+    <content type="html"><![CDATA[<p>Recently I ran into a problem where I needed to be able to send emails via two different SMTP accounts within the same Rails application. I scoured the net trying to find a method to do this, but I couldn't find one. So I pulled out my hack-hat and got started.</p>
+
+<p>If there are any better ways to do this, I would love to hear about it.</p>
+
+<p>I first created a new YAML file in my config folder called <code>action_mailer.yml</code>. In this file, I specified three different nodes with the actionmailer settings.</p>
+
+<p>```yaml
+development:
+  ...</p>
+
+<p>test:
+  ...</p>
+
+<p>production:
+  website1:</p>
+
+<pre><code>domain: "gary@superfriends.com"
+user_name: gary
+password: superduper
+address: smtp.gmail.com
+port: 587
+authentication: :plain
+</code></pre>
+
+<p>  website2:</p>
+
+<pre><code>domain: mysupercooldomain.com
+user_name: ABCDEF
+password: blahblah
+address: mail.authsmtp.com
+port: 25
+authentication: :plain
+</code></pre>
+
+<p>```</p>
+
+<p>Afterwards, I created two mailer models that represent each of the different mailers I will use.</p>
+
+<p>```ruby</p>
+
+<h1>app/models/mailer1.rb</h1>
+
+<p>class Website1 &lt; ActionMailer::Base
+  def load_settings</p>
+
+<pre><code>options = YAML.load_file("#{RAILS_ROOT}/config/action_mailer.yml")[RAILS_ENV]["website1"]
+@@smtp_settings = {
+  :address              =&gt; options["address"],
+  :port                 =&gt; options["port"],
+  :domain               =&gt; options["domain"],
+  :authentication       =&gt; options["authentication"],
+  :user_name            =&gt; options["user_name"],
+  :password             =&gt; options["password"]
+}
+</code></pre>
+
+<p>  end</p>
+
+<p>  def welcome_email(recipient, sent_at = Time.now)</p>
+
+<pre><code>load_settings
+@subject = 'Thank you for visiting website 1'
+@recipients = RAILS_ENV == "production" ? recipient : "cavneb@gmail.com"
+@from = 'gary@superfriends.com'
+@sent_on = sent_at
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>```ruby</p>
+
+<h1>app/models/mailer2.rb</h1>
+
+<p>class Website2 &lt; ActionMailer::Base
+  def load_settings</p>
+
+<pre><code>options = YAML.load_file("#{RAILS_ROOT}/config/action_mailer.yml")[RAILS_ENV]["website2"]
+@@smtp_settings = {
+  :address              =&gt; options["address"],
+  :port                 =&gt; options["port"],
+  :domain               =&gt; options["domain"],
+  :authentication       =&gt; options["authentication"],
+  :user_name            =&gt; options["user_name"],
+  :password             =&gt; options["password"]
+}
+</code></pre>
+
+<p>  end</p>
+
+<p>  def welcome_email(recipient, sent_at = Time.now)</p>
+
+<pre><code>load_settings
+@subject = 'Thank you for visiting website 2'
+@recipients = RAILS_ENV == "production" ? recipient : "cavneb@gmail.com"
+@from = 'info@mysupercooldomain.com'
+@sent_on = sent_at
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>So now when I send an email, I can first determine which mailer to use and then send the email.</p>
+
+<p>For example, your controller might have code that looks like this:</p>
+
+<p>```ruby</p>
+
+<h1>Found in code of controller</h1>
+
+<p>if session[:template_name] == "website1"
+  Website1.deliver_welcome_email("cavneb@gmail.com")
+else
+  Website2.deliver_welcome_email("cavneb@gmail.com")
+end
+```</p>
+
+<p>I realize this is probably the hard way, but hey, it's a start. Please post any plugins or alternatives to doing this if you know of any.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Custom SOAP Requests with Ruby and Net::HTTP]]></title>
+    <link href="http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http/"/>
+    <updated>2008-12-19T00:00:00-07:00</updated>
+    <id>http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http</id>
+    <content type="html"><![CDATA[<p><img src="/images/posts/golf_scale.jpg"></p>
+
+<p>I interviewed at a company a while ago and one of the questions they asked me was the familiar "You have 8 golf balls and a justice scale. One of the golf balls has a bubble in it making it a tiny bit lighter, but you can't tell by looking at it or holding it. How many times do you need to use the scale in order to find the defective ball?". I left the interview thinking that the answer was 3. After about 3 hours of thinking about it, I realized that the answer was 2 tries.</p>
+
+<p>The reason I share this with you is because today I found the answer to something that I've been thinking about for much longer than 3 hours. For about 1 1/2 years, I have been trying to find a good way to simply post a SOAP request via ruby without having to use SOAP4r or WSDL's. Some of you might find this a bit odd that it took me this long to figure this out, but then again, it's almost impossible to find any examples of this online.</p>
+
+<p>Enough history. Let's get to the code.</p>
+
+<p>In my book, <a href="http://www.amazon.com/gp/product/0596520700?ie=UTF8&amp;tag=kobu-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596520700">Rails Pocket Reference</a>, I have a section about using SOAP. In the example, I used the soap/wsdlDriver library to parse a WSDL from GeoCoder.us, a free US address geocoder tool. Instead of using the WSDL, you can access the response directly.</p>
+
+<p>```ruby
+require 'net/http'
+require 'net/https'</p>
+
+<h1>Create te http object</h1>
+
+<p>http = Net::HTTP.new('rpc.geocoder.us', 80)
+http.use_ssl = false
+path = '/service/soap/'</p>
+
+<h1>Create the SOAP Envelope</h1>
+
+<p>data = &lt;<-EOF
+<?xml version="1.0" encoding="UTF-8"?>
+&lt;SOAP-ENV:Envelope
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+  &lt;SOAP-ENV:Body></p>
+
+<pre><code>&lt;m:geocode xmlns:m="http://rpc.geocoder.us/Geo/Coder/US/"&gt;
+  &lt;location xsi:type="xsd:string"&gt;1005 Gravenstein Highway North Sebastopol, CA 95472&lt;/location&gt;
+&lt;/m:geocode&gt;
+</code></pre>
+
+<p>  &lt;/SOAP-ENV:Body>
+&lt;/SOAP-ENV:Envelope>
+EOF</p>
+
+<h1>Set Headers</h1>
+
+<p>headers = {
+  'Referer' => 'http://www.appfusion.net',
+  'Content-Type' => 'text/xml',
+  'Host' => 'rpc.geocoder.us'
+}</p>
+
+<h1>Post the request</h1>
+
+<p>resp, data = http.post(path, data, headers)</p>
+
+<h1>Output the results</h1>
+
+<p>puts 'Code = ' + resp.code
+puts 'Message = ' + resp.message
+resp.each { |key, val| puts key + ' = ' + val }
+puts data
+```</p>
+
+<p>I hope this makes using SOAP with Ruby a lot less cryptic for other as it does me.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -2,7 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://cavneb.github.com
+url: http://coderberry.me
 title: coderberry.me
 subtitle: learning by teaching
 author: Eric Berry
@@ -90,11 +90,11 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name: cavneb
+disqus_short_name: coderberry
 disqus_show_comment_count: true
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-26417518-1
 
 # Facebook Like
 facebook_like: true

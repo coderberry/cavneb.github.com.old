@@ -81,13 +81,13 @@ google_plus_one_size: medium
 googleplus_user: 
 googleplus_hidden: true
 
-# Pinboard
-pinboard_user:
-pinboard_count: 3
+# # Pinboard
+# pinboard_user:
+# pinboard_count: 3
 
-# Delicious
-delicious_user:
-delicious_count: 3
+# # Delicious
+# delicious_user:
+# delicious_count: 3
 
 # Disqus Comments
 disqus_short_name: coderberry

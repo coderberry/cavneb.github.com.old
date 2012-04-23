@@ -1,13 +1,17 @@
-{% include head.html %}
-<body id="article">
+---
+layout: default
+---
 
-  <div id="container">
-    {% include header.html %}
-    {% include page_content.html %}
-    {% include footer.html %}
-  </div>
-
-  {% include bottom_scripts.html %}
-</body>
-</html>
-
+<article class="page">
+    {% if page.title %}
+    <h1 class="title">{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
+    {% endif %}
+    <div class="entry">{{ content }}</div>
+</article>
+{% include post/sharing.html %}
+{% if site.disqus_short_name and page.comments == true %}
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
+</section>
+{% endif %}

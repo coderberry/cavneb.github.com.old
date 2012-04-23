@@ -1,23 +1,18 @@
 ---
-layout: home
+layout: default
 ---
-{% include about_me.html %}
-<h3>Posts</h3>
+
 {% assign index = true %}
 {% for post in paginator.posts %}
 {% assign content = post.content %}
-  <article>
-    {% include article.html %}
-  </article>
+    <article class="post">{% include article.html %}</article>
 {% endfor %}
-<nav role="pagination">
-  <div>
-    {% if paginator.next_page %}
-      <a class="prev" href="{{ site.url }}{{paginator.next_page}}">&larr; Older</a>
-    {% endif %}
-    <a href="{{ site.url }}/archives">Blog Archives</a>
+<nav id="pagenavi">
     {% if paginator.previous_page %}
-    <a class="next" href="{{ site.url }}{{paginator.previous_page}}">Newer &rarr;</a>
+        <a href="{{paginator.previous_page}}" class="prev">Prev</a>
     {% endif %}
-  </div>
+    {% if paginator.next_page %}
+        <a href="{{paginator.next_page}}" class="next">Next</a>
+    {% endif %}
+    <a href="{{ root_url }}/blog/archives" class="center">Blog Archives</a>
 </nav>

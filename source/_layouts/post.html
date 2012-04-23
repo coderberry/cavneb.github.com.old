@@ -1,13 +1,13 @@
-{% include head.html %}
-<body id="post">
+---
+layout: default
+single: true
+---
 
-  <div id="container">
-    {% include header.html %}
-    {% include article.html %}
-    {% include footer.html %}
-  </div>
-
-  {% include bottom_scripts.html %}
-</body>
-</html>
-
+<article class="post">{% include article.html %}</article>
+{% include post/sharing.html %}
+{% if site.disqus_short_name and page.comments == true %}
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
+</section>
+{% endif %}

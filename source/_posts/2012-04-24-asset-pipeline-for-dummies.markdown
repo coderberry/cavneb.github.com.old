@@ -14,16 +14,18 @@ The Rails asset pipeline is very powerful, but often misunderstood. At the [Utah
 
 ## Purpose
 
-The asset pipeline has one goal: pre-process, compress and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.
+The asset pipeline has three goals: pre-process, compress and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.
 
 ## Moving Parts
 
 <img src="/images/posts/sprockets.png" class="fleft" align="top" />
-The asset pipeline is powered by two technologies: [Sprockets](https://github.com/sstephenson/sprockets) and [Tilt](https://github.com/rtomayko/tilt), which is a dependency of Sprockets (look at your `Gemfile.lock` if you don't believe me). 
+The asset pipeline is powered by two technologies: [Sprockets](https://github.com/sstephenson/sprockets) and [Tilt](https://github.com/rtomayko/tilt), the latter being a dependency of the former (look at your `Gemfile.lock` if you don't believe me). 
 
 **Sprockets** performs the asset packaging which takes the assets from all the specified paths, compiles them together and places them in the target path (public/assets).
 
 **Tilt** is the template engine that Sprockets uses. This allows file types like *scss* and *erb* to be used in the asset pipeline. See the [Tilt Readme](https://github.com/rtomayko/tilt/blob/master/README.md) for a list of supported template engines.
+
+{% img /images/posts/asset_pipeline_flow.png %}
 
 ## Best Practice
 
@@ -75,6 +77,10 @@ See the [Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html
 A good way to include assets easily in a Rails application is by using gems. To include assets within a gem to be precompiled with the Rails application that is using it, all you need is to place the assets in one of the three standard asset paths: `app/assets`, `lib/assets` and `vendor/assets`. These will be automatically included in by Sprockets when the assets are compiled. See the [Rails documentation](http://guides.rubyonrails.org/asset_pipeline.html#adding-assets-to-your-gems) for more information.
 
 ## FAQ
+
+#### Q: Do I have to use the asset pipeline?
+
+No. You can place your images into the public folder directly.
 
 #### Q: What happens if there are duplicate file names in different asset folders?
 

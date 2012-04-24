@@ -7,7 +7,7 @@
     <meta name="author" content="Eric Berry">
 
     
-    <meta name="description" content="Grails Domain Classes and Enums For a long time, I have been creating static int values to represent states in domain classes. For example, I would &hellip;">
+    <meta name="description" content="Asset Pipeline for Dummies The Rails asset pipeline is very powerful, but often misunderstood. At the Utah Ruby User Group, most of the attendees &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -39,6 +39,7 @@
 <nav class="menu left"><ul class="main">
 	<li><a href="/">Blog</a></li>
 	<li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
 </ul>
 </nav>
 <div class="right">
@@ -79,6 +80,190 @@
 </script>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+    <h1 class="title"><a href="/blog/2012/04/24/asset-pipeline-for-dummies/">Asset Pipeline for Dummies</a></h1>
+    <div class="entry">
+        <p>The Rails asset pipeline is very powerful, but often misunderstood. At the <a href="http://utruby.org">Utah Ruby User Group</a>, most of the attendees aren&#8217;t sure how to use it fully in their Rails app. It&#8217;s considered as one of the <em>magic</em> features that Rails offers. I admit that I was confused as well and took it&#8217;s magic for granted. Not any longer.</p>
+
+<p><strong>In this article, I want to simplify the asset pipeline so it is better understood.</strong></p>
+
+<h2>Purpose</h2>
+
+<p>The asset pipeline has one goal: pre-process, compress and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.</p>
+
+<h2>Moving Parts</h2>
+
+<p><img src="/images/posts/sprockets.png" class="fleft" align="top" />
+The asset pipeline is powered by two technologies: <a href="https://github.com/sstephenson/sprockets">Sprockets</a> and <a href="https://github.com/rtomayko/tilt">Tilt</a>, which is a dependency of Sprockets (look at your <code>Gemfile.lock</code> if you don&#8217;t believe me).</p>
+
+<p><strong>Sprockets</strong> performs the asset packaging which takes the assets from all the specified paths, compiles them together and places them in the target path (public/assets).</p>
+
+<p><strong>Tilt</strong> is the template engine that Sprockets uses. This allows file types like <em>scss</em> and <em>erb</em> to be used in the asset pipeline. See the <a href="https://github.com/rtomayko/tilt/blob/master/README.md">Tilt Readme</a> for a list of supported template engines.</p>
+
+<h2>Best Practice</h2>
+
+<p>Rails applications default to having three possible asset paths.</p>
+
+<p><code>app/assets</code> is for assets that are owned by the application, such as custom images, JavaScript files or stylesheets.</p>
+
+<p><code>lib/assets</code> is for your own libraries’ code that doesn’t really fit into the scope of the application or those libraries which are shared across applications.</p>
+
+<p><code>vendor/assets</code> is for assets that are owned by outside entities, such as code for JavaScript plugins and CSS frameworks.</p>
+
+<h2>Usage</h2>
+
+<p>Using the asset pipeline is very simple. All it involves is placing assets (js/css/images/other) into the asset path. You can access the files using multiple helper methods within your views:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">audio_path</span><span class="p">(</span><span class="s2">&quot;horse.wav&quot;</span><span class="p">)</span>   <span class="c1"># =&gt; /audios/horse.wav</span>
+</span><span class='line'><span class="n">audio_tag</span><span class="p">(</span><span class="s2">&quot;sound&quot;</span><span class="p">)</span>        <span class="c1"># =&gt; &lt;audio src=&quot;/audios/sound&quot; /&gt;</span>
+</span><span class='line'><span class="n">font_path</span><span class="p">(</span><span class="s2">&quot;font.ttf&quot;</span><span class="p">)</span>     <span class="c1"># =&gt; /fonts/font.ttf</span>
+</span><span class='line'><span class="n">image_path</span><span class="p">(</span><span class="s2">&quot;edit.png&quot;</span><span class="p">)</span>    <span class="c1"># =&gt; &quot;/images/edit.png&quot;</span>
+</span><span class='line'><span class="n">image_tag</span><span class="p">(</span><span class="s2">&quot;icon.png&quot;</span><span class="p">)</span>     <span class="c1"># =&gt; &lt;img src=&quot;/images/icon.png&quot; alt=&quot;Icon&quot; /&gt;</span>
+</span><span class='line'><span class="n">video_path</span><span class="p">(</span><span class="s2">&quot;hd.avi&quot;</span><span class="p">)</span>      <span class="c1"># =&gt; /videos/hd.avi</span>
+</span><span class='line'><span class="n">video_tag</span><span class="p">(</span><span class="s2">&quot;trailer.ogg&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; &lt;video src=&quot;/videos/trailer.ogg&quot; /&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>See <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a> documentation for more information.</p>
+
+<h2>Misconceptions</h2>
+
+<h4>Files must belong in their respective paths, for example, all JavaScript files must be in a <code>javascripts</code> folder within an asset path.</h4>
+
+<p>The truth is that the paths (<em>stylesheets</em>, <em>javascripts</em>, <em>images</em>) are only there for organization. You can have all the assets in a single folder or in a hundred.</p>
+
+<h4><a href="http://sass-lang.com/">Sass</a> files need to use <em>erb</em> extension to allow for asset path inclusions within the files.</h4>
+
+<p>The truth is that <code>sass-rails</code> provides <code>-url</code> and <code>-path</code> helpers for the following asset types: image, font, video, audio, JavaScript and stylesheet.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">image</span><span class="o">-</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;rails.png&quot;</span><span class="p">)</span>         <span class="c1"># becomes url(/assets/rails.png)</span>
+</span><span class='line'><span class="n">image</span><span class="o">-</span><span class="n">path</span><span class="p">(</span><span class="s2">&quot;rails.png&quot;</span><span class="p">)</span>        <span class="c1"># becomes &quot;/assets/rails.png&quot;.</span>
+</span><span class='line'><span class="n">asset</span><span class="o">-</span><span class="n">url</span><span class="p">(</span><span class="s2">&quot;rails.png&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>  <span class="c1"># becomes url(/assets/rails.png)</span>
+</span><span class='line'><span class="n">asset</span><span class="o">-</span><span class="n">path</span><span class="p">(</span><span class="s2">&quot;rails.png&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span> <span class="c1"># becomes &quot;/assets/rails.png&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>See the <a href="http://guides.rubyonrails.org/asset_pipeline.html#coding-links-to-assets">Rails Asset Pipeline</a> guide (2.2.2) for more information.</p>
+
+<h2>Adding to Gems</h2>
+
+<p>A good way to include assets easily in a Rails application is by using gems. To include assets within a gem to be precompiled with the Rails application that is using it, all you need is to place the assets in one of the three standard asset paths: <code>app/assets</code>, <code>lib/assets</code> and <code>vendor/assets</code>. These will be automatically included in by Sprockets when the assets are compiled. See the <a href="http://guides.rubyonrails.org/asset_pipeline.html#adding-assets-to-your-gems">Rails documentation</a> for more information.</p>
+
+<h2>FAQ</h2>
+
+<h4>Q: What happens if there are duplicate file names in different asset folders?</h4>
+
+<p>Let&#8217;s say you have two asset files with the same name in different paths. For example, let&#8217;s say we have two files: <code>app/assets/stylesheets/style.css.scss</code> and <code>vendor/assets/stylesheets/style.css.scss</code>.</p>
+
+<p>When the assets are compiled, it disregards all the duplicate files after the first one found in the asset path. Let&#8217;s look at the asset path using the <em>rails console</em>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>&gt;&gt; y Rails.application.config.assets.paths
+</span><span class='line'>---
+</span><span class='line'>- /Users/eberry/example/app/assets/images
+</span><span class='line'>- /Users/eberry/example/app/assets/javascripts
+</span><span class='line'>- /Users/eberry/example/app/assets/stylesheets
+</span><span class='line'>- /Users/eberry/example/vendor/assets/javascripts
+</span><span class='line'>- /Users/eberry/example/vendor/assets/stylesheets
+</span><span class='line'>- /Users/eberry/.rvm/gems/ruby-1.9.2-p290/gems/jquery-rails-2.0.2/vendor/assets/javascripts
+</span><span class='line'>- /Users/eberry/.rvm/gems/ruby-1.9.2-p290/gems/coffee-rails-3.2.2/lib/assets/javascripts
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that the path <code>/Users/eberry/example/app/assets/stylesheets</code> appears before the path <code>/Users/eberry/example/vendor/assets/stylesheets</code>.</p>
+
+<h4>Q: How can I precompile assets that aren&#8217;t to be used in the pipeline?</h4>
+
+<p>Let&#8217;s say you want to include the folder <code>other/assets</code> into the asset pipeline to be precompiled. This is a simple addition in the <code>application.rb</code> file (or environment specific config file).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Foo</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
+</span><span class='line'>    <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>    <span class="c1"># Add additional path to the assets path for pipeline compilation</span>
+</span><span class='line'>    <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">paths</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="si">}</span><span class="s2">/other/assets&quot;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now when you run the command <code>Rails.application.config.assets.paths</code> in the Rails console, you will see the new asset path.</p>
+
+<h4>Q: How can I precompile additional assets without having to include them in the manifest?</h4>
+
+<p>Let&#8217;s say we have a file called <code>search.js</code> in our <code>app/assets/javascripts</code> directory and we don&#8217;t include it in the manifest. We still would like it to be compiled and placed into the <code>public/assets</code> when the assets are compiled.</p>
+
+<p>This is very simple. Just add the following to your <code>application.rb</code> file (or environment specific config file):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Precompile additional assets (application.js, </span>
+</span><span class='line'><span class="c1"># application.css, and all non-JS/CSS are already added)</span>
+</span><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">+=</span> <span class="sx">%w( search.js )</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This configuration option appears by default in <code>config/environments/production.rb</code>.</p>
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-24T08:41:00-06:00" pubdate data-updated="true">Apr 24<span>th</span>, 2012</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</div>
+
+</div>
+        
+        <span class="comments"><a href="/blog/2012/04/24/asset-pipeline-for-dummies/#disqus_thread">Comments</a></span>
+        
+    </div>
+</article>
 
 
     <article class="post">
@@ -730,173 +915,6 @@ vagrant@lucid32:~$ sudo apt-get install rabbitmq-server
 </div>
         
         <span class="comments"><a href="/blog/2011/05/17/how-to-fix-the-iconv-require-error-in-ruby-1-dot-9-and-rvm/#disqus_thread">Comments</a></span>
-        
-    </div>
-</article>
-
-
-    <article class="post">
-    <h1 class="title"><a href="/blog/2011/03/29/multi-associative-gorm-criteria-with-projections/">Multi-Associative GORM Criteria With Projections</a></h1>
-    <div class="entry">
-        <p>I have three domain classes: Lead, Submission and BuyerLog:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">class</span> <span class="nc">Lead</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">submissions:</span> <span class="n">Submission</span> <span class="o">]</span>
-</span><span class='line'>  <span class="n">Date</span> <span class="n">dateCreated</span>
-</span><span class='line'>  <span class="c1">// ...</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">Submission</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">lead:</span> <span class="n">Lead</span> <span class="o">]</span>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">buyerLogs:</span> <span class="n">BuyerLog</span> <span class="o">]</span>
-</span><span class='line'>  <span class="n">Lead</span> <span class="n">lead</span>
-</span><span class='line'>  <span class="c1">// ...</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">BuyerLog</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">submission:</span> <span class="n">Submission</span> <span class="o">]</span>
-</span><span class='line'>  <span class="n">Submission</span> <span class="n">submission</span>
-</span><span class='line'>  <span class="n">String</span> <span class="n">leadBuyer</span>
-</span><span class='line'>  <span class="c1">// ...</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I have a need to get the number of duplicate leads which share the same leadBuyer (in the BuyerLog domain class). Here is the SQL:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="k">count</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">FROM</span> <span class="n">lead</span> <span class="k">AS</span> <span class="n">l</span><span class="p">,</span> <span class="n">submission</span> <span class="k">AS</span> <span class="n">s</span><span class="p">,</span> <span class="n">buyerLog</span> <span class="k">as</span> <span class="n">bl</span>
-</span><span class='line'>    <span class="k">WHERE</span> <span class="n">l</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">leadId</span>
-</span><span class='line'>      <span class="k">AND</span> <span class="n">s</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">bl</span><span class="p">.</span><span class="n">submissionId</span>
-</span><span class='line'>      <span class="k">AND</span> <span class="n">bl</span><span class="p">.</span><span class="n">leadBuyer</span> <span class="o">=</span> <span class="err">$</span><span class="n">buyerName</span>
-</span><span class='line'>      <span class="k">AND</span> <span class="n">l</span><span class="p">.</span><span class="n">id</span> <span class="o">!=</span> <span class="err">$</span><span class="n">lead</span><span class="p">.</span><span class="n">id</span>
-</span><span class='line'>      <span class="k">AND</span> <span class="n">l</span><span class="p">.</span><span class="n">dateCreated</span><span class="p">::</span><span class="nb">date</span> <span class="o">&gt;</span> <span class="err">$</span><span class="n">daysAgo</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I want to do this using GORM / Criteria Builder. Here&#8217;s my final code:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Count duplicate submissions within 45 days</span>
-</span><span class='line'><span class="cm"> * SELECT count(l.id)</span>
-</span><span class='line'><span class="cm"> *      FROM lead AS l, submission AS s, buyerLog as bl</span>
-</span><span class='line'><span class="cm"> *      WHERE l.id = s.leadId</span>
-</span><span class='line'><span class="cm"> *          AND s.id = bl.submissionId</span>
-</span><span class='line'><span class="cm"> *          AND bl.leadBuyer = $buyerName</span>
-</span><span class='line'><span class="cm"> *          AND l.id != $lead.id</span>
-</span><span class='line'><span class="cm"> *          AND l.dateCreated::date &gt; $daysAgo</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">protected</span> <span class="n">def</span> <span class="n">Boolean</span> <span class="nf">isDuplicateSubmission</span><span class="o">(</span><span class="n">Lead</span> <span class="n">lead</span><span class="o">,</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">buyerNames</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">def</span> <span class="n">isDuplicate</span> <span class="o">=</span> <span class="kc">false</span>
-</span><span class='line'>  <span class="n">def</span> <span class="n">daysAgo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">()</span> <span class="o">-</span> <span class="mi">45</span>
-</span><span class='line'>  <span class="n">def</span> <span class="n">cnt</span> <span class="o">=</span> <span class="n">Lead</span><span class="o">.</span><span class="na">withCriteria</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">not</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">idEq</span><span class="o">(</span><span class="n">lead</span><span class="o">.</span><span class="na">id</span><span class="o">)</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">and</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">le</span><span class="o">(</span><span class="err">&#39;</span><span class="n">dateCreated</span><span class="err">&#39;</span><span class="o">,</span> <span class="n">daysAgo</span><span class="o">)</span>
-</span><span class='line'>      <span class="n">submissions</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">buyerLogs</span> <span class="o">{</span>
-</span><span class='line'>          <span class="n">inList</span><span class="o">(</span><span class="err">&#39;</span><span class="n">leadBuyer</span><span class="err">&#39;</span><span class="o">,</span> <span class="n">buyerNames</span><span class="o">)</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">projections</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">rowCount</span><span class="o">()</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>  <span class="k">return</span> <span class="o">(</span><span class="n">cnt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Thanks to schmolly159 on the #grails freenode IRC channel for the examples and continued help.</p>
-
-        
-        
-    </div>
-    <div class="meta">
-        <div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-03-29T00:00:00-06:00" pubdate data-updated="true">Mar 29<span>th</span>, 2011</time></div>
-        <div class="tags">
-
-<div class="cat">
-  
-    <a class='category' href='/blog/categories/gorm/'>GORM</a>, <a class='category' href='/blog/categories/grails/'>Grails</a>
-  
-</div>
-
-</div>
-        
-        <span class="comments"><a href="/blog/2011/03/29/multi-associative-gorm-criteria-with-projections/#disqus_thread">Comments</a></span>
         
     </div>
 </article>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-04-23T13:54:25-06:00</updated>
+  <updated>2012-04-24T13:10:15-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -12,6 +12,141 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Asset Pipeline for Dummies]]></title>
+    <link href="http://coderberry.me/blog/2012/04/24/asset-pipeline-for-dummies/"/>
+    <updated>2012-04-24T08:41:00-06:00</updated>
+    <id>http://coderberry.me/blog/2012/04/24/asset-pipeline-for-dummies</id>
+    <content type="html"><![CDATA[<p>The Rails asset pipeline is very powerful, but often misunderstood. At the <a href="http://utruby.org">Utah Ruby User Group</a>, most of the attendees aren't sure how to use it fully in their Rails app. It's considered as one of the <em>magic</em> features that Rails offers. I admit that I was confused as well and took it's magic for granted. Not any longer.</p>
+
+<p><strong>In this article, I want to simplify the asset pipeline so it is better understood.</strong></p>
+
+<h2>Purpose</h2>
+
+<p>The asset pipeline has one goal: pre-process, compress and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.</p>
+
+<h2>Moving Parts</h2>
+
+<p><img src="http://coderberry.me/images/posts/sprockets.png" class="fleft" align="top" />
+The asset pipeline is powered by two technologies: <a href="https://github.com/sstephenson/sprockets">Sprockets</a> and <a href="https://github.com/rtomayko/tilt">Tilt</a>, which is a dependency of Sprockets (look at your <code>Gemfile.lock</code> if you don't believe me).</p>
+
+<p><strong>Sprockets</strong> performs the asset packaging which takes the assets from all the specified paths, compiles them together and places them in the target path (public/assets).</p>
+
+<p><strong>Tilt</strong> is the template engine that Sprockets uses. This allows file types like <em>scss</em> and <em>erb</em> to be used in the asset pipeline. See the <a href="https://github.com/rtomayko/tilt/blob/master/README.md">Tilt Readme</a> for a list of supported template engines.</p>
+
+<h2>Best Practice</h2>
+
+<p>Rails applications default to having three possible asset paths.</p>
+
+<p><code>app/assets</code> is for assets that are owned by the application, such as custom images, JavaScript files or stylesheets.</p>
+
+<p><code>lib/assets</code> is for your own libraries’ code that doesn’t really fit into the scope of the application or those libraries which are shared across applications.</p>
+
+<p><code>vendor/assets</code> is for assets that are owned by outside entities, such as code for JavaScript plugins and CSS frameworks.</p>
+
+<h2>Usage</h2>
+
+<p>Using the asset pipeline is very simple. All it involves is placing assets (js/css/images/other) into the asset path. You can access the files using multiple helper methods within your views:</p>
+
+<p><code>ruby
+audio_path("horse.wav")   # =&gt; /audios/horse.wav
+audio_tag("sound")        # =&gt; &lt;audio src="http://coderberry.me/audios/sound" /&gt;
+font_path("font.ttf")     # =&gt; /fonts/font.ttf
+image_path("edit.png")    # =&gt; "/images/edit.png"
+image_tag("icon.png")     # =&gt; &lt;img src="http://coderberry.me/images/icon.png" alt="Icon" /&gt;
+video_path("hd.avi")      # =&gt; /videos/hd.avi
+video_tag("trailer.ogg")  # =&gt; &lt;video src="http://coderberry.me/videos/trailer.ogg" /&gt;
+</code></p>
+
+<p>See <a href="http://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a> documentation for more information.</p>
+
+<h2>Misconceptions</h2>
+
+<h4>Files must belong in their respective paths, for example, all JavaScript files must be in a <code>javascripts</code> folder within an asset path.</h4>
+
+<p>The truth is that the paths (<em>stylesheets</em>, <em>javascripts</em>, <em>images</em>) are only there for organization. You can have all the assets in a single folder or in a hundred.</p>
+
+<h4><a href="http://sass-lang.com/">Sass</a> files need to use <em>erb</em> extension to allow for asset path inclusions within the files.</h4>
+
+<p>The truth is that <code>sass-rails</code> provides <code>-url</code> and <code>-path</code> helpers for the following asset types: image, font, video, audio, JavaScript and stylesheet.</p>
+
+<p><code>ruby
+image-url("rails.png")         # becomes url(/assets/rails.png)
+image-path("rails.png")        # becomes "/assets/rails.png".
+asset-url("rails.png", image)  # becomes url(/assets/rails.png)
+asset-path("rails.png", image) # becomes "/assets/rails.png"
+</code></p>
+
+<p>See the <a href="http://guides.rubyonrails.org/asset_pipeline.html#coding-links-to-assets">Rails Asset Pipeline</a> guide (2.2.2) for more information.</p>
+
+<h2>Adding to Gems</h2>
+
+<p>A good way to include assets easily in a Rails application is by using gems. To include assets within a gem to be precompiled with the Rails application that is using it, all you need is to place the assets in one of the three standard asset paths: <code>app/assets</code>, <code>lib/assets</code> and <code>vendor/assets</code>. These will be automatically included in by Sprockets when the assets are compiled. See the <a href="http://guides.rubyonrails.org/asset_pipeline.html#adding-assets-to-your-gems">Rails documentation</a> for more information.</p>
+
+<h2>FAQ</h2>
+
+<h4>Q: What happens if there are duplicate file names in different asset folders?</h4>
+
+<p>Let's say you have two asset files with the same name in different paths. For example, let's say we have two files: <code>app/assets/stylesheets/style.css.scss</code> and <code>vendor/assets/stylesheets/style.css.scss</code>.</p>
+
+<p>When the assets are compiled, it disregards all the duplicate files after the first one found in the asset path. Let's look at the asset path using the <em>rails console</em>:</p>
+
+<p>```bash</p>
+
+<blockquote><blockquote><h2>y Rails.application.config.assets.paths</h2>
+
+<ul>
+<li>/Users/eberry/example/app/assets/images</li>
+<li>/Users/eberry/example/app/assets/javascripts</li>
+<li>/Users/eberry/example/app/assets/stylesheets</li>
+<li>/Users/eberry/example/vendor/assets/javascripts</li>
+<li>/Users/eberry/example/vendor/assets/stylesheets</li>
+<li>/Users/eberry/.rvm/gems/ruby-1.9.2-p290/gems/jquery-rails-2.0.2/vendor/assets/javascripts</li>
+<li>/Users/eberry/.rvm/gems/ruby-1.9.2-p290/gems/coffee-rails-3.2.2/lib/assets/javascripts
+```</li>
+</ul>
+</blockquote></blockquote>
+
+<p>Note that the path <code>/Users/eberry/example/app/assets/stylesheets</code> appears before the path <code>/Users/eberry/example/vendor/assets/stylesheets</code>.</p>
+
+<h4>Q: How can I precompile assets that aren't to be used in the pipeline?</h4>
+
+<p>Let's say you want to include the folder <code>other/assets</code> into the asset pipeline to be precompiled. This is a simple addition in the <code>application.rb</code> file (or environment specific config file).</p>
+
+<p>```ruby
+module Foo
+  class Application &lt; Rails::Application</p>
+
+<pre><code>...
+# Add additional path to the assets path for pipeline compilation
+config.assets.paths &lt;&lt; "#{Rails.root}/other/assets"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Now when you run the command <code>Rails.application.config.assets.paths</code> in the Rails console, you will see the new asset path.</p>
+
+<h4>Q: How can I precompile additional assets without having to include them in the manifest?</h4>
+
+<p>Let's say we have a file called <code>search.js</code> in our <code>app/assets/javascripts</code> directory and we don't include it in the manifest. We still would like it to be compiled and placed into the <code>public/assets</code> when the assets are compiled.</p>
+
+<p>This is very simple. Just add the following to your <code>application.rb</code> file (or environment specific config file):</p>
+
+<p>```ruby</p>
+
+<h1>Precompile additional assets (application.js,</h1>
+
+<h1>application.css, and all non-JS/CSS are already added)</h1>
+
+<p>config.assets.precompile += %w( search.js )
+```</p>
+
+<p>This configuration option appears by default in <code>config/environments/production.rb</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Bunny RabbitMQ]]></title>
@@ -383,76 +518,6 @@ end
 ```</p>
 
 <p>I realize this is probably the hard way, but hey, it's a start. Please post any plugins or alternatives to doing this if you know of any.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating Custom SOAP Requests with Ruby and Net::HTTP]]></title>
-    <link href="http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http/"/>
-    <updated>2008-12-19T00:00:00-07:00</updated>
-    <id>http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http</id>
-    <content type="html"><![CDATA[<p><img src="/images/posts/golf_scale.jpg"></p>
-
-<p>I interviewed at a company a while ago and one of the questions they asked me was the familiar "You have 8 golf balls and a justice scale. One of the golf balls has a bubble in it making it a tiny bit lighter, but you can't tell by looking at it or holding it. How many times do you need to use the scale in order to find the defective ball?". I left the interview thinking that the answer was 3. After about 3 hours of thinking about it, I realized that the answer was 2 tries.</p>
-
-<p>The reason I share this with you is because today I found the answer to something that I've been thinking about for much longer than 3 hours. For about 1 1/2 years, I have been trying to find a good way to simply post a SOAP request via ruby without having to use SOAP4r or WSDL's. Some of you might find this a bit odd that it took me this long to figure this out, but then again, it's almost impossible to find any examples of this online.</p>
-
-<p>Enough history. Let's get to the code.</p>
-
-<p>In my book, <a href="http://www.amazon.com/gp/product/0596520700?ie=UTF8&amp;tag=kobu-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596520700">Rails Pocket Reference</a>, I have a section about using SOAP. In the example, I used the soap/wsdlDriver library to parse a WSDL from GeoCoder.us, a free US address geocoder tool. Instead of using the WSDL, you can access the response directly.</p>
-
-<p>```ruby
-require 'net/http'
-require 'net/https'</p>
-
-<h1>Create te http object</h1>
-
-<p>http = Net::HTTP.new('rpc.geocoder.us', 80)
-http.use_ssl = false
-path = '/service/soap/'</p>
-
-<h1>Create the SOAP Envelope</h1>
-
-<p>data = &lt;<-EOF
-<?xml version="1.0" encoding="UTF-8"?>
-&lt;SOAP-ENV:Envelope
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
-  SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
-  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-  &lt;SOAP-ENV:Body></p>
-
-<pre><code>&lt;m:geocode xmlns:m="http://rpc.geocoder.us/Geo/Coder/US/"&gt;
-  &lt;location xsi:type="xsd:string"&gt;1005 Gravenstein Highway North Sebastopol, CA 95472&lt;/location&gt;
-&lt;/m:geocode&gt;
-</code></pre>
-
-<p>  &lt;/SOAP-ENV:Body>
-&lt;/SOAP-ENV:Envelope>
-EOF</p>
-
-<h1>Set Headers</h1>
-
-<p>headers = {
-  'Referer' => 'http://www.appfusion.net',
-  'Content-Type' => 'text/xml',
-  'Host' => 'rpc.geocoder.us'
-}</p>
-
-<h1>Post the request</h1>
-
-<p>resp, data = http.post(path, data, headers)</p>
-
-<h1>Output the results</h1>
-
-<p>puts 'Code = ' + resp.code
-puts 'Message = ' + resp.message
-resp.each { |key, val| puts key + ' = ' + val }
-puts data
-```</p>
-
-<p>I hope this makes using SOAP with Ruby a lot less cryptic for other as it does me.</p>
 ]]></content>
   </entry>
   

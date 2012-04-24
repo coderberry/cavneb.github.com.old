@@ -8,20 +8,120 @@ categories:
 - Ruby
 ---
 
-The Rails asset pipeline is very powerful, but often misunderstood. At our [ruby user group](http://utruby.org), most of the attendees aren't sure how to use it fully in their Rails app. It's considered as one of the *magic* features that Rails offers. I admit that I was confused as well and took it's magic for granted. Not any longer. 
+The Rails asset pipeline is very powerful, but often misunderstood. At the [Utah Ruby User Group](http://utruby.org), most of the attendees aren't sure how to use it fully in their Rails app. It's considered as one of the *magic* features that Rails offers. I admit that I was confused as well and took it's magic for granted. Not any longer. 
 
 **In this article, I want to simplify the asset pipeline so it is better understood.**
 
 ## Purpose
 
+The asset pipeline has one goal: pre-process, compress and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.
+
 ## Moving Parts
 
-{% img [fleft] /images/posts/sprockets.png %}
+<img src="/images/posts/sprockets.png" class="fleft" align="top" />
+The asset pipeline is powered by two technologies: [Sprockets](https://github.com/sstephenson/sprockets) and [Tilt](https://github.com/rtomayko/tilt), which is a dependency of Sprockets (look at your `Gemfile.lock` if you don't believe me). 
+
+**Sprockets** performs the asset packaging which takes the assets from all the specified paths, compiles them together and places them in the target path (public/assets).
+
+**Tilt** is the template engine that Sprockets uses. This allows file types like *scss* and *erb* to be used in the asset pipeline. See the [Tilt Readme](https://github.com/rtomayko/tilt/blob/master/README.md) for a list of supported template engines.
+
+## Best Practice
+
+Rails applications default to having three possible asset paths.
+
+`app/assets` is for assets that are owned by the application, such as custom images, JavaScript files or stylesheets.
+
+`lib/assets` is for your own libraries’ code that doesn’t really fit into the scope of the application or those libraries which are shared across applications.
+
+`vendor/assets` is for assets that are owned by outside entities, such as code for JavaScript plugins and CSS frameworks.
 
 ## Usage
 
+Using the asset pipeline is very simple. All it involves is placing assets (js/css/images/other) into the asset path. You can access the files using multiple helper methods within your views:
+
+```ruby
+audio_path("horse.wav")   # => /audios/horse.wav
+audio_tag("sound")        # => <audio src="/audios/sound" />
+font_path("font.ttf")     # => /fonts/font.ttf
+image_path("edit.png")    # => "/images/edit.png"
+image_tag("icon.png")     # => <img src="/images/icon.png" alt="Icon" />
+video_path("hd.avi")      # => /videos/hd.avi
+video_tag("trailer.ogg")  # => <video src="/videos/trailer.ogg" />
+```
+
+See [ActionView::Helpers::AssetTagHelper](http://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html) documentation for more information.
+
 ## Misconceptions
+
+#### Files must belong in their respective paths, for example, all JavaScript files must be in a `javascripts` folder within an asset path.
+
+The truth is that the paths (*stylesheets*, *javascripts*, *images*) are only there for organization. You can have all the assets in a single folder or in a hundred.
+
+#### [Sass](http://sass-lang.com/) files need to use *erb* extension to allow for asset path inclusions within the files. 
+
+The truth is that `sass-rails` provides `-url` and `-path` helpers for the following asset types: image, font, video, audio, JavaScript and stylesheet.
+
+```ruby
+image-url("rails.png")         # becomes url(/assets/rails.png)
+image-path("rails.png")        # becomes "/assets/rails.png".
+asset-url("rails.png", image)  # becomes url(/assets/rails.png)
+asset-path("rails.png", image) # becomes "/assets/rails.png"
+```
+
+See the [Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html#coding-links-to-assets) guide (2.2.2) for more information.
 
 ## Adding to Gems
 
-## Tips and Recipes
+A good way to include assets easily in a Rails application is by using gems. To include assets within a gem to be precompiled with the Rails application that is using it, all you need is to place the assets in one of the three standard asset paths: `app/assets`, `lib/assets` and `vendor/assets`. These will be automatically included in by Sprockets when the assets are compiled. See the [Rails documentation](http://guides.rubyonrails.org/asset_pipeline.html#adding-assets-to-your-gems) for more information.
+
+## FAQ
+
+#### Q: What happens if there are duplicate file names in different asset folders?
+
+Let's say you have two asset files with the same name in different paths. For example, let's say we have two files: `app/assets/stylesheets/style.css.scss` and `vendor/assets/stylesheets/style.css.scss`. 
+
+When the assets are compiled, it disregards all the duplicate files after the first one found in the asset path. Let's look at the asset path using the *rails console*:
+
+```bash
+>> y Rails.application.config.assets.paths
+---
+- /Users/eberry/example/app/assets/images
+- /Users/eberry/example/app/assets/javascripts
+- /Users/eberry/example/app/assets/stylesheets
+- /Users/eberry/example/vendor/assets/javascripts
+- /Users/eberry/example/vendor/assets/stylesheets
+- /Users/eberry/.rvm/gems/ruby-1.9.2-p290/gems/jquery-rails-2.0.2/vendor/assets/javascripts
+- /Users/eberry/.rvm/gems/ruby-1.9.2-p290/gems/coffee-rails-3.2.2/lib/assets/javascripts
+```
+
+Note that the path `/Users/eberry/example/app/assets/stylesheets` appears before the path `/Users/eberry/example/vendor/assets/stylesheets`.
+
+#### Q: How can I precompile assets that aren't to be used in the pipeline?
+
+Let's say you want to include the folder `other/assets` into the asset pipeline to be precompiled. This is a simple addition in the `application.rb` file (or environment specific config file).
+
+```ruby
+module Foo
+  class Application < Rails::Application
+    ...
+    # Add additional path to the assets path for pipeline compilation
+    config.assets.paths << "#{Rails.root}/other/assets"
+  end
+end
+```
+
+Now when you run the command `Rails.application.config.assets.paths` in the Rails console, you will see the new asset path.
+
+#### Q: How can I precompile additional assets without having to include them in the manifest?
+
+Let's say we have a file called `search.js` in our `app/assets/javascripts` directory and we don't include it in the manifest. We still would like it to be compiled and placed into the `public/assets` when the assets are compiled.
+
+This is very simple. Just add the following to your `application.rb` file (or environment specific config file):
+
+```ruby
+# Precompile additional assets (application.js, 
+# application.css, and all non-JS/CSS are already added)
+config.assets.precompile += %w( search.js )
+```
+
+This configuration option appears by default in `config/environments/production.rb`.

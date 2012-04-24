@@ -144,6 +144,23 @@ end
 
 Now when you run the command `Rails.application.config.assets.paths` in the Rails console, you will see the new asset path.
 
+#### Q: How can I have certain JavaScript files appear at the bottom of the HTML page?
+
+Multiple manifests can be created in the assets folder. For example, I can have a separate manifest called `footer.js` which includes the files `footer_1.js` and `footer_2.js`.
+
+```javascript
+//= require footer_1
+//= require footer_2
+```
+
+I can add this into the HTML by using the same `javascript_include_tag` that is used in the HTML header of the layout.
+
+```html
+    <%= javascript_include_tag("footer") %>
+  </body>
+</html>
+```
+
 #### Q: How can I precompile additional assets without having to include them in the manifest?
 
 Let's say we have a file called `search.js` in our `app/assets/javascripts` directory and we don't include it in the manifest. We still would like it to be compiled and placed into the `public/assets` when the assets are compiled.
@@ -170,4 +187,4 @@ As I said before, the asset pipeline has three goals: **precompile*, *concatenat
 
 I strongly suggest learning more about the asset pipeline by going to the [Rails documentation](http://guides.rubyonrails.org/asset_pipeline.html). Ryan Bates also two excellent Railscasts on [Understanding the Asset Pipeline](http://railscasts.com/episodes/279-understanding-the-asset-pipeline) and [Asset Pipeline in Production](http://railscasts.com/episodes/341-asset-pipeline-in-production).
 
-Feel free to hop on the #urug channel on Freenode to chat with me anytime.
+Feel free to hop on the #urug channel on Freenode to chat with me anytime. Also, for a different perspective on asset handling, see the [Resources](http://grails-plugins.github.com/grails-resources/) plugin for [Grails](http://grails.org). 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-04-24T15:03:20-06:00</updated>
+  <updated>2012-04-24T16:10:11-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -39,7 +39,7 @@ The asset pipeline is powered by two technologies: <a href="https://github.com/s
 
 <p><img src="/images/posts/asset_pipeline_flow.png"></p>
 
-<h2>Best Practice</h2>
+<h2>Asset Paths</h2>
 
 <p>Rails applications default to having three possible asset paths.</p>
 
@@ -88,7 +88,7 @@ video_tag("trailer.ogg")  # =&gt; &lt;video src="http://coderberry.me/videos/tra
 
 <h2>Misconceptions</h2>
 
-<h4>Files must belong in their respective paths, for example, all JavaScript files must be in a <code>javascripts</code> folder within an asset path.</h4>
+<h4>Files must belong in their respective paths. For example, all JavaScript files must be in a <code>javascripts</code> folder within an asset path.</h4>
 
 <p>The truth is that the paths (<em>stylesheets</em>, <em>javascripts</em>, <em>images</em>) are only there for organization. You can have all the assets in a single folder or in a hundred.</p>
 

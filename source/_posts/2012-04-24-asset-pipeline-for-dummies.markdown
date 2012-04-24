@@ -39,6 +39,24 @@ Rails applications default to having three possible asset paths.
 
 `vendor/assets` is for assets that are owned by outside entities, such as code for JavaScript plugins and CSS frameworks.
 
+## The Manifest
+
+The keystone of the asset pipeline is the manifest file. By default, Rails creates one for stylesheets (`app/assets/stylesheets/application.css`) and JavaScript files (`app/assets/javascripts/application.js`). This file uses *directives* to declare dependencies in asset source files.
+
+For directives that take a path argument, you may specify either a logical path or a relative path. Relative paths begin with ./ and reference files relative to the location of the current file.
+
+Here are some *directives* that can be used:
+
+* `require` *[path]* inserts the contents of the asset source file specified by path. If the file is required multiple times, it will appear in the bundle only once.
+* `include` *[path]* works like require, but inserts the contents of the specified source file even if it has already been included or required.
+`require_directory` *[path]* requires all source files of the same format in the directory specified by path. Files are required in alphabetical order.
+* `require_tree` *[path]* works like require_directory, but operates recursively to require all files in all subdirectories of the directory specified by path.
+* `require_self` tells Sprockets to insert the body of the current source file before any subsequent require or include directives.
+* `depend_on` *[path]* declares a dependency on the given path without including it in the bundle. This is useful when you need to expire an asset's cache in response to a change in another file.
+* `stub` *[path]* allows dependency to be excluded from the asset bundle. The path must be a valid asset and may or may not already be part of the bundle. Once stubbed, it is blacklisted and can't be brought back by any other require.
+
+Documentation for this section was largely extracted from the [Sprockets](https://github.com/sstephenson/sprockets) README.
+
 ## Usage
 
 Using the asset pipeline is very simple. All it involves is placing assets (js/css/images/other) into the asset path. You can access the files using multiple helper methods within your views:

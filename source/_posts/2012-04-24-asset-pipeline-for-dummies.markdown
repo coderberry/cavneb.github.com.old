@@ -16,7 +16,7 @@ I reference the word *asset* a lot in this article. An asset is a file that is t
 
 ## Purpose
 
-The asset pipeline has three goals: preprocess, concatenate and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.
+The asset pipeline has three goals: precompile, concatenate and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.
 
 ## Moving Parts
 

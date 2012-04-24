@@ -10,11 +10,13 @@ categories:
 
 The Rails asset pipeline is very powerful, but often misunderstood. At the [Utah Ruby User Group](http://utruby.org), most of the attendees aren't sure how to use it fully in their Rails app. It's considered as one of the *magic* features that Rails offers. I admit that I was confused as well and took it's magic for granted. Not any longer. 
 
+I reference the word *asset* a lot in this article. An asset is a file that is to be included in your Rails application (JavaScript, CSS, Image, etc).
+
 **In this article, I want to simplify the asset pipeline so it is better understood.**
 
 ## Purpose
 
-The asset pipeline has three goals: pre-process, compress and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.
+The asset pipeline has three goals: preprocess, concatenate and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.
 
 ## Moving Parts
 
@@ -80,7 +82,11 @@ A good way to include assets easily in a Rails application is by using gems. To 
 
 #### Q: Do I have to use the asset pipeline?
 
-No. You can place your images into the public folder directly.
+No. In Rails 3.1, the asset pipeline is enabled by default. It can be disabled in `config/application.rb` by putting this line inside the application class definition:
+
+```ruby
+config.assets.enabled = false
+```
 
 #### Q: What happens if there are duplicate file names in different asset folders?
 
@@ -131,3 +137,17 @@ config.assets.precompile += %w( search.js )
 ```
 
 This configuration option appears by default in `config/environments/production.rb`.
+
+## Summary
+
+As I said before, the asset pipeline has three goals: **precompile*, *concatenate* and *minify* assets.
+
+**Precompilation** let's you use higher-level languages to create actual assets (for example, Sass to CSS).
+
+**Concatenation** is very important in the production environment. It can reduce the number of requests that a browser makes to render a web page, which leads to faster load time.
+
+**Minification** takes out the extra whitespace and comments from your assets. This allows for smaller asset file size, which leads to faster load times.
+
+I strongly suggest learning more about the asset pipeline by going to the [Rails documentation](http://guides.rubyonrails.org/asset_pipeline.html). Ryan Bates also two excellent Railscasts on [Understanding the Asset Pipeline](http://railscasts.com/episodes/341-asset-pipeline-in-production) and [Asset Pipeline in Production](http://railscasts.com/episodes/341-asset-pipeline-in-production).
+
+Feel free to hop on the #urug channel on Freenode to chat with me anytime.

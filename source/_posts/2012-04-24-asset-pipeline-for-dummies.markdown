@@ -80,6 +80,26 @@ A good way to include assets easily in a Rails application is by using gems. To 
 
 ## FAQ
 
+#### Q: Why doesn't the auto-generated scss and coffeescript only get included in their respective controller views?
+
+Because the assets all concatenate into one file, there are no seperate files to be included on a view-by-view basis. There is a way to get around this by using css classes.
+
+Let's say we have a controller named `Users` with an accompanying sass file called `users.css.scss`. Make sure your css is wrapped in a class which includes the name of the controller:
+
+```css
+body-users {
+  // Custom css goes here
+}
+```
+
+Next, add a class to the body tag of your layout:
+
+```html
+<body class="body-#{controller_name}">
+```
+
+Now the css in `users.css.scss` will only be applied to views under the `Users` controller.
+
 #### Q: Do I have to use the asset pipeline?
 
 No. In Rails 3.1, the asset pipeline is enabled by default. It can be disabled in `config/application.rb` by putting this line inside the application class definition:
@@ -148,6 +168,6 @@ As I said before, the asset pipeline has three goals: **precompile*, *concatenat
 
 **Minification** takes out the extra whitespace and comments from your assets. This allows for smaller asset file size, which leads to faster load times.
 
-I strongly suggest learning more about the asset pipeline by going to the [Rails documentation](http://guides.rubyonrails.org/asset_pipeline.html). Ryan Bates also two excellent Railscasts on [Understanding the Asset Pipeline](http://railscasts.com/episodes/341-asset-pipeline-in-production) and [Asset Pipeline in Production](http://railscasts.com/episodes/341-asset-pipeline-in-production).
+I strongly suggest learning more about the asset pipeline by going to the [Rails documentation](http://guides.rubyonrails.org/asset_pipeline.html). Ryan Bates also two excellent Railscasts on [Understanding the Asset Pipeline](http://railscasts.com/episodes/279-understanding-the-asset-pipeline) and [Asset Pipeline in Production](http://railscasts.com/episodes/341-asset-pipeline-in-production).
 
 Feel free to hop on the #urug channel on Freenode to chat with me anytime.

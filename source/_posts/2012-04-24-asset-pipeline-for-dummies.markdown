@@ -29,7 +29,7 @@ The asset pipeline is powered by two technologies: [Sprockets](https://github.co
 
 {% img /images/posts/asset_pipeline_flow.png %}
 
-## Best Practice
+## Asset Paths
 
 Rails applications default to having three possible asset paths.
 
@@ -75,7 +75,7 @@ See [ActionView::Helpers::AssetTagHelper](http://api.rubyonrails.org/classes/Act
 
 ## Misconceptions
 
-#### Files must belong in their respective paths, for example, all JavaScript files must be in a `javascripts` folder within an asset path.
+#### Files must belong in their respective paths. For example, all JavaScript files must be in a `javascripts` folder within an asset path.
 
 The truth is that the paths (*stylesheets*, *javascripts*, *images*) are only there for organization. You can have all the assets in a single folder or in a hundred.
 
@@ -205,4 +205,4 @@ As I said before, the asset pipeline has three goals: **precompile*, *concatenat
 
 I strongly suggest learning more about the asset pipeline by going to the [Rails documentation](http://guides.rubyonrails.org/asset_pipeline.html). Ryan Bates also two excellent Railscasts on [Understanding the Asset Pipeline](http://railscasts.com/episodes/279-understanding-the-asset-pipeline) and [Asset Pipeline in Production](http://railscasts.com/episodes/341-asset-pipeline-in-production).
 
-Feel free to hop on the #urug channel on Freenode to chat with me anytime. Also, for a different perspective on asset handling, see the [Resources](http://grails-plugins.github.com/grails-resources/) plugin for [Grails](http://grails.org). 
+Feel free to hop on the #urug channel on Freenode to chat with me anytime. Also, for a different perspective on asset handling, see the [Resources](http://grails-plugins.github.com/grails-resources/) plugin for [Grails](http://grails.org).

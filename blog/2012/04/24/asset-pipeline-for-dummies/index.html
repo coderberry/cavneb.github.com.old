@@ -164,6 +164,30 @@ The asset pipeline is powered by two technologies: <a href="https://github.com/s
 
 <h2>FAQ</h2>
 
+<h4>Q: Why doesn&#8217;t the auto-generated scss and coffeescript only get included in their respective controller views?</h4>
+
+<p>Because the assets all concatenate into one file, there are no seperate files to be included on a view-by-view basis. There is a way to get around this by using css classes.</p>
+
+<p>Let&#8217;s say we have a controller named <code>Users</code> with an accompanying sass file called <code>users.css.scss</code>. Make sure your css is wrapped in a class which includes the name of the controller:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="nt">body-users</span> <span class="p">{</span>
+</span><span class='line'>  <span class="o">//</span> <span class="n">Custom</span> <span class="n">css</span> <span class="n">goes</span> <span class="n">here</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, add a class to the body tag of your layout:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;body</span> <span class="na">class=</span><span class="s">&quot;body-#{controller_name}&quot;</span><span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now the css in <code>users.css.scss</code> will only be applied to views under the <code>Users</code> controller.</p>
+
 <h4>Q: Do I have to use the asset pipeline?</h4>
 
 <p>No. In Rails 3.1, the asset pipeline is enabled by default. It can be disabled in <code>config/application.rb</code> by putting this line inside the application class definition:</p>
@@ -225,6 +249,28 @@ The asset pipeline is powered by two technologies: <a href="https://github.com/s
 
 <p>Now when you run the command <code>Rails.application.config.assets.paths</code> in the Rails console, you will see the new asset path.</p>
 
+<h4>Q: How can I have certain JavaScript files appear at the bottom of the HTML page?</h4>
+
+<p>Multiple manifests can be created in the assets folder. For example, I can have a separate manifest called <code>footer.js</code> which includes the files <code>footer_1.js</code> and <code>footer_2.js</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">//= require footer_1</span>
+</span><span class='line'><span class="c1">//= require footer_2</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I can add this into the HTML by using the same <code>javascript_include_tag</code> that is used in the HTML header of the layout.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="err">&lt;</span>%= javascript_include_tag(&quot;footer&quot;) %&gt;
+</span><span class='line'>  <span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h4>Q: How can I precompile additional assets without having to include them in the manifest?</h4>
 
 <p>Let&#8217;s say we have a file called <code>search.js</code> in our <code>app/assets/javascripts</code> directory and we don&#8217;t include it in the manifest. We still would like it to be compiled and placed into the <code>public/assets</code> when the assets are compiled.</p>
@@ -252,9 +298,9 @@ The asset pipeline is powered by two technologies: <a href="https://github.com/s
 
 <p><strong>Minification</strong> takes out the extra whitespace and comments from your assets. This allows for smaller asset file size, which leads to faster load times.</p>
 
-<p>I strongly suggest learning more about the asset pipeline by going to the <a href="http://guides.rubyonrails.org/asset_pipeline.html">Rails documentation</a>. Ryan Bates also two excellent Railscasts on <a href="http://railscasts.com/episodes/341-asset-pipeline-in-production">Understanding the Asset Pipeline</a> and <a href="http://railscasts.com/episodes/341-asset-pipeline-in-production">Asset Pipeline in Production</a>.</p>
+<p>I strongly suggest learning more about the asset pipeline by going to the <a href="http://guides.rubyonrails.org/asset_pipeline.html">Rails documentation</a>. Ryan Bates also two excellent Railscasts on <a href="http://railscasts.com/episodes/279-understanding-the-asset-pipeline">Understanding the Asset Pipeline</a> and <a href="http://railscasts.com/episodes/341-asset-pipeline-in-production">Asset Pipeline in Production</a>.</p>
 
-<p>Feel free to hop on the #urug channel on Freenode to chat with me anytime.</p>
+<p>Feel free to hop on the #urug channel on Freenode to chat with me anytime. Also, for a different perspective on asset handling, see the <a href="http://grails-plugins.github.com/grails-resources/">Resources</a> plugin for <a href="http://grails.org">Grails</a>.</p>
 </div>
     <div class="meta">
         <div class="date">

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-04-24T13:55:52-06:00</updated>
+  <updated>2012-04-24T14:33:09-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -90,6 +90,26 @@ asset-path("rails.png", image) # becomes "/assets/rails.png"
 
 <h2>FAQ</h2>
 
+<h4>Q: Why doesn't the auto-generated scss and coffeescript only get included in their respective controller views?</h4>
+
+<p>Because the assets all concatenate into one file, there are no seperate files to be included on a view-by-view basis. There is a way to get around this by using css classes.</p>
+
+<p>Let's say we have a controller named <code>Users</code> with an accompanying sass file called <code>users.css.scss</code>. Make sure your css is wrapped in a class which includes the name of the controller:</p>
+
+<p><code>css
+body-users {
+  // Custom css goes here
+}
+</code></p>
+
+<p>Next, add a class to the body tag of your layout:</p>
+
+<p><code>html
+&lt;body class="body-#{controller_name}"&gt;
+</code></p>
+
+<p>Now the css in <code>users.css.scss</code> will only be applied to views under the <code>Users</code> controller.</p>
+
 <h4>Q: Do I have to use the asset pipeline?</h4>
 
 <p>No. In Rails 3.1, the asset pipeline is enabled by default. It can be disabled in <code>config/application.rb</code> by putting this line inside the application class definition:</p>
@@ -141,6 +161,26 @@ end
 
 <p>Now when you run the command <code>Rails.application.config.assets.paths</code> in the Rails console, you will see the new asset path.</p>
 
+<h4>Q: How can I have certain JavaScript files appear at the bottom of the HTML page?</h4>
+
+<p>Multiple manifests can be created in the assets folder. For example, I can have a separate manifest called <code>footer.js</code> which includes the files <code>footer_1.js</code> and <code>footer_2.js</code>.</p>
+
+<p><code>javascript
+//= require footer_1
+//= require footer_2
+</code></p>
+
+<p>I can add this into the HTML by using the same <code>javascript_include_tag</code> that is used in the HTML header of the layout.</p>
+
+<p>```html</p>
+
+<pre><code>&lt;%= javascript_include_tag("footer") %&gt;
+</code></pre>
+
+<p>  </body>
+</html>
+```</p>
+
 <h4>Q: How can I precompile additional assets without having to include them in the manifest?</h4>
 
 <p>Let's say we have a file called <code>search.js</code> in our <code>app/assets/javascripts</code> directory and we don't include it in the manifest. We still would like it to be compiled and placed into the <code>public/assets</code> when the assets are compiled.</p>
@@ -168,9 +208,9 @@ end
 
 <p><strong>Minification</strong> takes out the extra whitespace and comments from your assets. This allows for smaller asset file size, which leads to faster load times.</p>
 
-<p>I strongly suggest learning more about the asset pipeline by going to the <a href="http://guides.rubyonrails.org/asset_pipeline.html">Rails documentation</a>. Ryan Bates also two excellent Railscasts on <a href="http://railscasts.com/episodes/341-asset-pipeline-in-production">Understanding the Asset Pipeline</a> and <a href="http://railscasts.com/episodes/341-asset-pipeline-in-production">Asset Pipeline in Production</a>.</p>
+<p>I strongly suggest learning more about the asset pipeline by going to the <a href="http://guides.rubyonrails.org/asset_pipeline.html">Rails documentation</a>. Ryan Bates also two excellent Railscasts on <a href="http://railscasts.com/episodes/279-understanding-the-asset-pipeline">Understanding the Asset Pipeline</a> and <a href="http://railscasts.com/episodes/341-asset-pipeline-in-production">Asset Pipeline in Production</a>.</p>
 
-<p>Feel free to hop on the #urug channel on Freenode to chat with me anytime.</p>
+<p>Feel free to hop on the #urug channel on Freenode to chat with me anytime. Also, for a different perspective on asset handling, see the <a href="http://grails-plugins.github.com/grails-resources/">Resources</a> plugin for <a href="http://grails.org">Grails</a>.</p>
 ]]></content>
   </entry>
   

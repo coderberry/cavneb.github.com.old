@@ -89,7 +89,7 @@
 
 <h2>Purpose</h2>
 
-<p>The asset pipeline has three goals: preprocess, concatenate and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.</p>
+<p>The asset pipeline has three goals: precompile, concatenate and minify assets into one central path. Or in other words, it takes all of your stylesheets, javascript files, images and any other files you want, joins them together when possible, and places them in the public/assets folder.</p>
 
 <h2>Moving Parts</h2>
 
@@ -111,6 +111,27 @@ The asset pipeline is powered by two technologies: <a href="https://github.com/s
 <p><code>lib/assets</code> is for your own libraries’ code that doesn’t really fit into the scope of the application or those libraries which are shared across applications.</p>
 
 <p><code>vendor/assets</code> is for assets that are owned by outside entities, such as code for JavaScript plugins and CSS frameworks.</p>
+
+<h2>The Manifest</h2>
+
+<p>The keystone of the asset pipeline is the manifest file. By default, Rails creates one for stylesheets (<code>app/assets/stylesheets/application.css</code>) and JavaScript files (<code>app/assets/javascripts/application.js</code>). This file uses <em>directives</em> to declare dependencies in asset source files.</p>
+
+<p>For directives that take a path argument, you may specify either a logical path or a relative path. Relative paths begin with ./ and reference files relative to the location of the current file.</p>
+
+<p>Here are some <em>directives</em> that can be used:</p>
+
+<ul>
+<li><code>require</code> <em>[path]</em> inserts the contents of the asset source file specified by path. If the file is required multiple times, it will appear in the bundle only once.</li>
+<li><code>include</code> <em>[path]</em> works like require, but inserts the contents of the specified source file even if it has already been included or required.
+<code>require_directory</code> <em>[path]</em> requires all source files of the same format in the directory specified by path. Files are required in alphabetical order.</li>
+<li><code>require_tree</code> <em>[path]</em> works like require_directory, but operates recursively to require all files in all subdirectories of the directory specified by path.</li>
+<li><code>require_self</code> tells Sprockets to insert the body of the current source file before any subsequent require or include directives.</li>
+<li><code>depend_on</code> <em>[path]</em> declares a dependency on the given path without including it in the bundle. This is useful when you need to expire an asset&#8217;s cache in response to a change in another file.</li>
+<li><code>stub</code> <em>[path]</em> allows dependency to be excluded from the asset bundle. The path must be a valid asset and may or may not already be part of the bundle. Once stubbed, it is blacklisted and can&#8217;t be brought back by any other require.</li>
+</ul>
+
+
+<p>Documentation for this section was largely extracted from the <a href="https://github.com/sstephenson/sprockets">Sprockets</a> README.</p>
 
 <h2>Usage</h2>
 

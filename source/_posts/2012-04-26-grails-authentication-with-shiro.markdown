@@ -516,3 +516,5 @@ This tag only writes its body to the output if the current user does not have th
 ## Notes
 
 I did not cover topics such as permissions. For more information on this, please refer to the [Shiro documentation](http://shiro.apache.org/documentation.html) and the [Shiro Plugin](http://grails.org/plugin/shiro) source code.
+
+[Gavin Hogan](https://github.com/gavinhogan) has forked the grails-shiro plugin and has done some excellent work on updating the documentation. His fork can be found at [https://github.com/gavinhogan/grails-shiro/](https://github.com/gavinhogan/grails-shiro/).

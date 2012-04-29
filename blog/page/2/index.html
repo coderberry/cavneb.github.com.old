@@ -7,22 +7,7 @@
     <meta name="author" content="Eric Berry">
 
     
-    <meta name="description" content="Multi-Associative GORM Criteria With Projections I have three domain classes: Lead, Submission and BuyerLog: 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16 &hellip;">
+    <meta name="description" content="How to Fix the Iconv Require Error in Ruby 1.9 and RVM This post was copied from exceptions.wordpress.com with minor updates. So you are working &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -95,6 +80,100 @@
 </script>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+    <h1 class="title"><a href="/blog/2011/05/17/how-to-fix-the-iconv-require-error-in-ruby-1-dot-9-and-rvm/">How to Fix the Iconv Require Error in Ruby 1.9 and RVM</a></h1>
+    <div class="entry">
+        <p><em>This post was copied from <a href="http://exceptionz.wordpress.com/2010/02/03/how-to-fix-the-iconv-require-error-in-ruby-1-9/">exceptions.wordpress.com</a> with minor updates.</em></p>
+
+<p>So you are working with RVM / Rails 3 / Ruby 1.9.2 and you keep on getting the following error:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>'require': no such file to load – iconv (LoadError)</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>To fix the issue, perform the following steps:</strong></p>
+
+<ol>
+<li>Install readline using rvm: rvm install readline rvm package install readline</li>
+<li>Now install iconv by executing: rvm install iconv rvm package install iconv</li>
+<li>If you already have a version of Ruby 1.9 installed, we need to remove it by executing:</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rvm remove 1.9.2</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>The final step is to re-install the version of ruby:</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rvm install --trace 1.9.2 -C --with-iconv-dir=$HOME/.rvm/usr</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Now to test that it worked:</strong></p>
+
+<ol>
+<li>Change to the ruby version you installed: <em>rvm use 1.9.2</em></li>
+<li>Check you are on the right version of ruby:</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ruby -v
+</span><span class='line'>ruby 1.9.2p180 (2011-02-18 revision 30909) [x86_64-darwin10.6.0]</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>Start a new irb session</li>
+<li>Now you should be able to require &#8216;iconv&#8217; and get a &#8216;true&#8217; result</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ruby-1.9.2-p180 :001 &gt; require 'iconv'
+</span><span class='line'>=&gt; true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you should be good to go!</p>
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-17T00:00:00-06:00" pubdate data-updated="true">May 17<span>th</span>, 2011</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</div>
+
+</div>
+        
+        <span class="comments"><a href="/blog/2011/05/17/how-to-fix-the-iconv-require-error-in-ruby-1-dot-9-and-rvm/#disqus_thread">Comments</a></span>
+        
+    </div>
+</article>
 
 
     <article class="post">
@@ -918,82 +997,6 @@ found that I needed to use it again today so I posted it.</p>
 </div>
         
         <span class="comments"><a href="/blog/2010/10/12/uploading-files-in-grails/#disqus_thread">Comments</a></span>
-        
-    </div>
-</article>
-
-
-    <article class="post">
-    <h1 class="title"><a href="/blog/2010/10/08/passing-data-from-view-to-layout-via-pageproperty/">Passing Data From View to Layout via pageProperty</a></h1>
-    <div class="entry">
-        <p>I am writing a new Grails application which uses the website template Admintasia. Part of the layout gsp file has a section for the header and sub-header. For this to be used, I needed to be able to pass those two strings from the view to the layout.</p>
-
-<p>Here&#8217;s what my view looks like:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html&gt;</span>
-</span><span class='line'><span class="nt">&lt;head&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;layout&quot;</span> <span class="na">content=</span><span class="s">&quot;admintasia&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;pageHeader&quot;</span> <span class="na">content=</span><span class="s">&quot;This is a test&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;pageSubHeader&quot;</span> <span class="na">content=</span><span class="s">&quot;blah blah blah&quot;</span> <span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;/head&gt;</span>
-</span><span class='line'><span class="nt">&lt;body&gt;</span>
-</span><span class='line'>...
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And here&#8217;s what my layout looks like:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;h2&gt;&lt;g:pageProperty</span> <span class="na">name=</span><span class="s">&quot;meta.pageHeader&quot;</span>
-</span><span class='line'>          <span class="na">default=</span><span class="s">&quot;MISSING PAGE HEADER&quot;</span> <span class="nt">/&gt;&lt;/h2&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;h4&gt;&lt;g:pageProperty</span> <span class="na">name=</span><span class="s">&quot;meta.pageSubHeader&quot;</span>
-</span><span class='line'>          <span class="na">default=</span><span class="s">&quot;&quot;</span> <span class="nt">/&gt;&lt;/h4&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I hope this helps out!</p>
-
-        
-        
-    </div>
-    <div class="meta">
-        <div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-10-08T00:00:00-06:00" pubdate data-updated="true">Oct 8<span>th</span>, 2010</time></div>
-        <div class="tags">
-
-<div class="cat">
-  
-    <a class='category' href='/blog/categories/grails/'>Grails</a>, <a class='category' href='/blog/categories/views/'>Views</a>
-  
-</div>
-
-</div>
-        
-        <span class="comments"><a href="/blog/2010/10/08/passing-data-from-view-to-layout-via-pageproperty/#disqus_thread">Comments</a></span>
         
     </div>
 </article>

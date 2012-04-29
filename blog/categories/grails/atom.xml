@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-04-29T12:44:18-06:00</updated>
+  <updated>2012-04-29T12:54:50-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -677,6 +677,8 @@ This tag only writes its body to the output if the current user does not have th
 <h2>Notes</h2>
 
 <p>I did not cover topics such as permissions. For more information on this, please refer to the <a href="http://shiro.apache.org/documentation.html">Shiro documentation</a> and the <a href="http://grails.org/plugin/shiro">Shiro Plugin</a> source code.</p>
+
+<p><a href="https://github.com/gavinhogan">Gavin Hogan</a> has forked the grails-shiro plugin and has done some excellent work on updating the documentation. His fork can be found at <a href="https://github.com/gavinhogan/grails-shiro/">https://github.com/gavinhogan/grails-shiro/</a>.</p>
 ]]></content>
   </entry>
   

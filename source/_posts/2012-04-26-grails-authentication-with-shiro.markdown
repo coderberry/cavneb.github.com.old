@@ -6,6 +6,7 @@ comments: true
 categories: 
 - Grails
 - Authentication
+- Shiro
 ---
 
 > Source code for the example project can be found at [https://github.com/cavneb/grails-shiro-example](https://github.com/cavneb/grails-shiro-example).

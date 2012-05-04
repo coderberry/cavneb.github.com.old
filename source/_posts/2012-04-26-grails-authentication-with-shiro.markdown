@@ -72,7 +72,9 @@ The [Shiro Plugin](http://grails.org/plugin/shiro) can be installed by using the
         ...
 {% endcodeblock %}
 
-Once you have the dependency setup in the `BuildConfig.groovy` file, you must run the app to ensure the plugin is installed. After it's running, quit the app and return to the console.
+Once you have the dependency setup in the `BuildConfig.groovy` file, you must compile the app to make sure the dependencies are installed.
+
+<pre><code>$ grails compile</code></pre>
 
 Let's kickstart our app now by using the `shiro-quick-start` command. I am using the optional `--prefix=[package]`. Make sure you have a dot at the end if you are using the prefix.
 

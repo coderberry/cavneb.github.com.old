@@ -7,7 +7,9 @@
     <meta name="author" content="Eric Berry">
 
     
-    <meta name="description" content="Passing Data From View to Layout via pageProperty I am writing a new Grails application which uses the website template Admintasia. Part of the &hellip;">
+    <meta name="description" content="Uploading Files in Grails Here&#8217;s the slides from a presentation I did at the
+UGGUG in May 2010. I
+found that I needed to use it again today so &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -80,6 +82,228 @@
 </script>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+    <h1 class="title"><a href="/blog/2010/10/12/uploading-files-in-grails/">Uploading Files in Grails</a></h1>
+    <div class="entry">
+        <p>Here&#8217;s the slides from a presentation I did at the
+<a href="http://groups.google.com/group/uggug">UGGUG</a> in May 2010. I
+found that I needed to use it again today so I posted it.</p>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/4000139" width="565" height="400" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+
+<p>Here is the source code for the uploader service I created:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">berry</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.multipart.MultipartFile</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.codehaus.groovy.grails.web.context.ServletContextHolder</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">class</span> <span class="nc">FileUploadService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kt">boolean</span> <span class="n">transactional</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">def</span> <span class="n">String</span> <span class="nf">uploadFile</span><span class="o">(</span><span class="n">MultipartFile</span> <span class="n">file</span><span class="o">,</span>
+</span><span class='line'>      <span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">destinationDirectory</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">def</span> <span class="n">servletContext</span> <span class="o">=</span> <span class="n">ServletContextHolder</span><span class="o">.</span><span class="na">servletContext</span>
+</span><span class='line'>        <span class="n">def</span> <span class="n">storagePath</span> <span class="o">=</span> <span class="n">servletContext</span><span class="o">.</span><span class="na">getRealPath</span><span class="o">(</span><span class="n">destinationDirectory</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Create storage path directory if it does not exist</span>
+</span><span class='line'>        <span class="n">def</span> <span class="n">storagePathDirectory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">storagePath</span><span class="o">)</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">storagePathDirectory</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">print</span> <span class="s">&quot;CREATING DIRECTORY ${storagePath}: &quot;</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">storagePathDirectory</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">println</span> <span class="s">&quot;SUCCESS&quot;</span>
+</span><span class='line'>            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">println</span> <span class="s">&quot;FAILED&quot;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Store file</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">file</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;${storagePath}/${name}&quot;</span><span class="o">))</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s">&quot;Saved file: ${storagePath}/${name}&quot;</span>
+</span><span class='line'>            <span class="k">return</span> <span class="s">&quot;${storagePath}/${name}&quot;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">println</span> <span class="s">&quot;File ${file.inspect()} was empty!&quot;</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>A tip that you may enjoy is the way I implemented this uploader into a real world application. I wanted to be able to upload files into a folder within the web-app folder for development, but in production, I wanted to put it in a folder that is served via Tomcat directly. So on our production server, I created a folder at /opt/assets and created a symbolic link in the $TOMCAT_ROOT/webapps/assets to point to it. I modified the service as follows:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">berry</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.springframework.web.multipart.MultipartFile</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.codehaus.groovy.grails.web.context.ServletContextHolder</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">grails.util.GrailsUtil</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">class</span> <span class="nc">FileUploadService</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kt">boolean</span> <span class="n">transactional</span> <span class="o">=</span> <span class="kc">true</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">def</span> <span class="n">String</span> <span class="nf">uploadFile</span><span class="o">(</span><span class="n">MultipartFile</span> <span class="n">file</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">storagePath</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">GrailsUtil</span><span class="o">.</span><span class="na">environment</span> <span class="o">==</span> <span class="s">&quot;production&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">storagePath</span> <span class="o">=</span> <span class="s">&quot;/opt/assets&quot;</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">def</span> <span class="n">servletContext</span> <span class="o">=</span> <span class="n">ServletContextHolder</span><span class="o">.</span><span class="na">servletContext</span>
+</span><span class='line'>      <span class="n">storagePath</span> <span class="o">=</span> <span class="n">servletContext</span><span class="o">.</span><span class="na">getRealPath</span><span class="o">(</span><span class="err">&#39;</span><span class="n">assets</span><span class="err">&#39;</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Create storage path directory if it does not exist</span>
+</span><span class='line'>    <span class="n">def</span> <span class="n">storagePathDirectory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">storagePath</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(!</span><span class="n">storagePathDirectory</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">print</span> <span class="s">&quot;CREATING DIRECTORY ${storagePath}: &quot;</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(</span><span class="n">storagePathDirectory</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">println</span> <span class="s">&quot;SUCCESS&quot;</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">println</span> <span class="s">&quot;FAILED&quot;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Store file</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">file</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;${storagePath}/${name}&quot;</span><span class="o">))</span>
+</span><span class='line'>      <span class="n">println</span> <span class="s">&quot;Saved file: ${storagePath}/${name}&quot;</span>
+</span><span class='line'>      <span class="k">return</span> <span class="s">&quot;${storagePath}/${name}&quot;</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">println</span> <span class="s">&quot;File ${file.inspect()} was empty!&quot;</span>
+</span><span class='line'>      <span class="k">return</span> <span class="kc">null</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I then create a folder in my web-app folder named &#8216;assets&#8217;, being sure to add it to my ignore list for the repository. So once I upload the file, it will save to the correct location.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;${resource(dir:&#39;assets&#39;, file: &#39;myfile.jpg&#39;)}&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This now will work in both DEVELOPMENT and PRODUCTION enviroments.</p>
+
+<p><a href="http://github.com/cavneb/FileUploader">http://github.com/cavneb/FileUploader</a></p>
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-12T00:00:00-06:00" pubdate data-updated="true">Oct 12<span>th</span>, 2010</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/grails/'>Grails</a>
+  
+</div>
+
+</div>
+        
+        <span class="comments"><a href="/blog/2010/10/12/uploading-files-in-grails/#disqus_thread">Comments</a></span>
+        
+    </div>
+</article>
 
 
     <article class="post">
@@ -446,218 +670,6 @@ an issue. Here is the code:</p>
 </div>
         
         <span class="comments"><a href="/blog/2010/05/27/multi-line-rails-logger-trick/#disqus_thread">Comments</a></span>
-        
-    </div>
-</article>
-
-
-    <article class="post">
-    <h1 class="title"><a href="/blog/2009/03/30/using-multiple-smtp-accounts-with-rails-and-actionmailer/">Using Multiple SMTP Accounts With Rails &amp; ActionMailer</a></h1>
-    <div class="entry">
-        <p>Recently I ran into a problem where I needed to be able to send emails via two different SMTP accounts within the same Rails application. I scoured the net trying to find a method to do this, but I couldn&#8217;t find one. So I pulled out my hack-hat and got started.</p>
-
-<p>If there are any better ways to do this, I would love to hear about it.</p>
-
-<p>I first created a new YAML file in my config folder called <code>action_mailer.yml</code>. In this file, I specified three different nodes with the actionmailer settings.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">...</span>
-</span><span class='line'>
-</span><span class='line'><span class="l-Scalar-Plain">test</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">...</span>
-</span><span class='line'>
-</span><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">website1</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;gary@superfriends.com&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">user_name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">gary</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">superduper</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">address</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">smtp.gmail.com</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">587</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">authentication</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">:plain</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="l-Scalar-Plain">website2</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mysupercooldomain.com</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">user_name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ABCDEF</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">blahblah</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">address</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail.authsmtp.com</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">25</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">authentication</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">:plain</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Afterwards, I created two mailer models that represent each of the different mailers I will use.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># app/models/mailer1.rb</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Website1</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">load_settings</span>
-</span><span class='line'>    <span class="n">options</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">RAILS_ROOT</span><span class="si">}</span><span class="s2">/config/action_mailer.yml&quot;</span><span class="p">)</span><span class="o">[</span><span class="no">RAILS_ENV</span><span class="o">][</span><span class="s2">&quot;website1&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="vc">@@smtp_settings</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="ss">:address</span>              <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;address&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:port</span>                 <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;port&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:domain</span>               <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;domain&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:authentication</span>       <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;authentication&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:user_name</span>            <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;user_name&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:password</span>             <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">welcome_email</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">sent_at</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">load_settings</span>
-</span><span class='line'>    <span class="vi">@subject</span> <span class="o">=</span> <span class="s1">&#39;Thank you for visiting website 1&#39;</span>
-</span><span class='line'>    <span class="vi">@recipients</span> <span class="o">=</span> <span class="no">RAILS_ENV</span> <span class="o">==</span> <span class="s2">&quot;production&quot;</span> <span class="p">?</span> <span class="n">recipient</span> <span class="p">:</span> <span class="s2">&quot;cavneb@gmail.com&quot;</span>
-</span><span class='line'>    <span class="vi">@from</span> <span class="o">=</span> <span class="s1">&#39;gary@superfriends.com&#39;</span>
-</span><span class='line'>    <span class="vi">@sent_on</span> <span class="o">=</span> <span class="n">sent_at</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># app/models/mailer2.rb</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Website2</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">load_settings</span>
-</span><span class='line'>    <span class="n">options</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">RAILS_ROOT</span><span class="si">}</span><span class="s2">/config/action_mailer.yml&quot;</span><span class="p">)</span><span class="o">[</span><span class="no">RAILS_ENV</span><span class="o">][</span><span class="s2">&quot;website2&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="vc">@@smtp_settings</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="ss">:address</span>              <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;address&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:port</span>                 <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;port&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:domain</span>               <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;domain&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:authentication</span>       <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;authentication&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:user_name</span>            <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;user_name&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:password</span>             <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">welcome_email</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">sent_at</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">load_settings</span>
-</span><span class='line'>    <span class="vi">@subject</span> <span class="o">=</span> <span class="s1">&#39;Thank you for visiting website 2&#39;</span>
-</span><span class='line'>    <span class="vi">@recipients</span> <span class="o">=</span> <span class="no">RAILS_ENV</span> <span class="o">==</span> <span class="s2">&quot;production&quot;</span> <span class="p">?</span> <span class="n">recipient</span> <span class="p">:</span> <span class="s2">&quot;cavneb@gmail.com&quot;</span>
-</span><span class='line'>    <span class="vi">@from</span> <span class="o">=</span> <span class="s1">&#39;info@mysupercooldomain.com&#39;</span>
-</span><span class='line'>    <span class="vi">@sent_on</span> <span class="o">=</span> <span class="n">sent_at</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So now when I send an email, I can first determine which mailer to use and then send the email.</p>
-
-<p>For example, your controller might have code that looks like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Found in code of controller</span>
-</span><span class='line'><span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:template_name</span><span class="o">]</span> <span class="o">==</span> <span class="s2">&quot;website1&quot;</span>
-</span><span class='line'>  <span class="no">Website1</span><span class="o">.</span><span class="n">deliver_welcome_email</span><span class="p">(</span><span class="s2">&quot;cavneb@gmail.com&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'>  <span class="no">Website2</span><span class="o">.</span><span class="n">deliver_welcome_email</span><span class="p">(</span><span class="s2">&quot;cavneb@gmail.com&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I realize this is probably the hard way, but hey, it&#8217;s a start. Please post any plugins or alternatives to doing this if you know of any.</p>
-
-        
-        
-    </div>
-    <div class="meta">
-        <div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-03-30T00:00:00-06:00" pubdate data-updated="true">Mar 30<span>th</span>, 2009</time></div>
-        <div class="tags">
-
-<div class="cat">
-  
-    <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
-  
-</div>
-
-</div>
-        
-        <span class="comments"><a href="/blog/2009/03/30/using-multiple-smtp-accounts-with-rails-and-actionmailer/#disqus_thread">Comments</a></span>
         
     </div>
 </article>

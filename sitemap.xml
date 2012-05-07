@@ -91,19 +91,25 @@
         <lastmod>2012-05-04T14:50:31-06:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://coderberry.me/blog/2012/05/07/stupid-simple-post-slash-get-with-groovy-httpbuilder/
+        </loc>
+        <lastmod>2012-05-07T17:19:31-06:00</lastmod>
+    </url>
+    <url>
         <loc>http://coderberry.me/about/</loc>
         <lastmod>2012-04-24T11:06:07-06:00</lastmod>
     </url>
     <url>
         <loc>http://coderberry.me/archives/</loc>
-        <lastmod>2012-05-04T14:50:31-06:00</lastmod>
+        <lastmod>2012-05-07T17:19:31-06:00</lastmod>
     </url>
     <url>
         <loc>http://coderberry.me/blog/archives/</loc>
-        <lastmod>2012-05-04T14:50:31-06:00</lastmod>
+        <lastmod>2012-05-07T17:19:31-06:00</lastmod>
     </url>
     <url>
         <loc>http://coderberry.me/</loc>
-        <lastmod>2012-05-04T14:50:31-06:00</lastmod>
+        <lastmod>2012-05-07T17:19:31-06:00</lastmod>
     </url>
 </urlset>

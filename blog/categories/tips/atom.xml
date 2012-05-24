@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tips | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/tips/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-05-24T16:48:15-06:00</updated>
+  <updated>2012-05-24T16:57:00-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -18,7 +18,13 @@
     <link href="http://coderberry.me/blog/2012/05/24/tools-i-use-as-a-developer/"/>
     <updated>2012-05-24T15:48:00-06:00</updated>
     <id>http://coderberry.me/blog/2012/05/24/tools-i-use-as-a-developer</id>
-    <content type="html"><![CDATA[<p>Like any craftsman, a developer has a toolbox filled with items that helps him perform his craft. At a recent 'Tech Talk' at <a href="http://1on1.com">One on One</a>, I presented a few tools that I use in my day-to-day workings. At their request, I have compiled a list of each tool in my toolbox.</p>
+    <content type="html"><![CDATA[<p><img src="http://coderberry.me/images/posts/swiss_army_knife.jpg" class="fleft" align="top" />
+Like any craftsman, a developer has a toolbox filled with items that helps him perform his craft. At a recent 'Tech Talk' at <a href="http://1on1.com">One on One</a>, I presented a few tools that I use in my day-to-day workings. At their request, I have compiled a list of each tool in my toolbox.</p>
+
+<p>I would love it if you would also add in the comments the tools that you use. I'm sure there are plenty out there that would make my life easier!</p>
+
+<div style="clear: both;"></div>
+
 
 <h2>Text Editors &amp; IDE's</h2>
 

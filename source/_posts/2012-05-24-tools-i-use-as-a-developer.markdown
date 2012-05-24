@@ -8,8 +8,12 @@ categories:
 - Tools
 ---
 
+<img src="/images/posts/swiss_army_knife.jpg" class="fleft" align="top" />
 Like any craftsman, a developer has a toolbox filled with items that helps him perform his craft. At a recent 'Tech Talk' at <a href="http://1on1.com">One on One</a>, I presented a few tools that I use in my day-to-day workings. At their request, I have compiled a list of each tool in my toolbox.
 
+I would love it if you would also add in the comments the tools that you use. I'm sure there are plenty out there that would make my life easier!
+
+<div style="clear: both;"></div>
 
 ## Text Editors &amp; IDE's
 

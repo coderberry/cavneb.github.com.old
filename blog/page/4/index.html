@@ -7,7 +7,7 @@
     <meta name="author" content="Eric Berry">
 
     
-    <meta name="description" content="Using Multiple SMTP Accounts With Rails &amp; ActionMailer Recently I ran into a problem where I needed to be able to send emails via two different &hellip;">
+    <meta name="description" content="Multi-Line Rails Logger Trick One thing that I like to do with my logger output is allow for multi-line output. It makes it much easier to read and &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -80,6 +80,66 @@
 </script>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+    <h1 class="title"><a href="/blog/2010/05/27/multi-line-rails-logger-trick/">Multi-Line Rails Logger Trick</a></h1>
+    <div class="entry">
+        <p>One thing that I like to do with my logger output is allow for multi-line output. It makes it much easier to read and keeps my code cleaner.</p>
+
+<p>Instead of doing this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span> <span class="s2">&quot;Current Contest: </span><span class="si">#{</span><span class="vi">@contest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span> <span class="s2">&quot;Current User: </span><span class="si">#{</span><span class="vi">@contest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can do this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">logger</span><span class="o">.</span><span class="n">info</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s2">    Current Contest: </span><span class="si">#{</span><span class="vi">@contest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"></span>
+</span><span class='line'><span class="s2">    Current User: </span><span class="si">#{</span><span class="vi">@contest</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"></span>
+</span><span class='line'><span class="s2">&quot;&quot;&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-27T00:00:00-06:00" pubdate data-updated="true">May 27<span>th</span>, 2010</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</div>
+
+</div>
+        
+        <span class="comments"><a href="/blog/2010/05/27/multi-line-rails-logger-trick/#disqus_thread">Comments</a></span>
+        
+    </div>
+</article>
 
 
     <article class="post">

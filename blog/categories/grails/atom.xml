@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-05-24T16:57:00-06:00</updated>
+  <updated>2012-09-11T15:54:17-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -12,6 +12,141 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Airbrake exception logging in your Grails application]]></title>
+    <link href="http://coderberry.me/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application/"/>
+    <updated>2012-09-11T14:34:00-06:00</updated>
+    <id>http://coderberry.me/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application</id>
+    <content type="html"><![CDATA[<p>Recently I worked on migrating the Airbrake plugin written by <a href="https://github.com/plecong/grails-airbrake">Phuong LeCong</a> to Grails version 2.1 (<a href="https://github.com/cavneb/airbrake-grails">repo here</a>). After completing the plugin, I attempted to submit it to the Grails plugin repo via the <a href="http://grails.1312388.n4.nabble.com/Permission-to-publish-plugin-td4634449.html">developer mailing list</a>.</p>
+
+<p><a href="[@bostanio](http://twitter.com/bostanio">Jon Palmer</a>) brought to my attention that there is a Java library that is being used to accomplish this task. I had searched prior for a solution that would work with Grails, but I didn't find any solid instructions on how to integrate the Java Airbrake library into my Grails apps.</p>
+
+<p>So here it is.</p>
+
+<h3>Installation</h3>
+
+<p>The Airbrake Java library exists in the Maven repo (<a href="http://mvnrepository.com/artifact/io.airbrake/airbrake-java/2.2.0">http://mvnrepository.com/artifact/io.airbrake/airbrake-java/2.2.0</a>) and can be installed by simple adding the following as a runtime dependency in your <code>BuildConfig.groovy</code> file:</p>
+
+<p>```
+dependencies {</p>
+
+<pre><code>runtime 'io.airbrake:airbrake-java:2.2.0'
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Next time your app compiles, the Airbrake library should be installed and ready to go.</p>
+
+<h3>Integration</h3>
+
+<p>It's nearly as simple to integrate the Airbrake exception notification process into your Grails application. This is done by adding a log4j appender into your <code>Config.groovy</code> file. Make sure that you update the appender config with the correct project API key from Airbrake.</p>
+
+<p>```
+log4j = {
+  // Example of changing the log pattern for the default console appender:
+  appenders {</p>
+
+<pre><code>appender name: 'airbrake', new airbrake.AirbrakeAppender (
+  api_key: 'API_KEY', // replace with your Airbrake API key
+  env: ((Environment.current == Environment.PRODUCTION) ? 'Production' : 'Development')
+)
+...
+</code></pre>
+
+<p>```</p>
+
+<p>After the appender is in place, you need to let your Grails app know to use it as a global appender. Add <code>'airbrake'</code> to your root <code>debug</code> node:</p>
+
+<p>```
+log4j = {
+  // Example of changing the log pattern for the default console appender:
+  appenders {</p>
+
+<pre><code>appender new airbrake.AirbrakeAppender (
+  name: 'airbrake', 
+  api_key: 'API_KEY', // replace with your Airbrake API key
+  env: ((Environment.current == Environment.PRODUCTION)  ? 'production' : 'development'),
+  enabled: true
+)
+...
+</code></pre>
+
+<p>  }</p>
+
+<p>  root {</p>
+
+<pre><code>debug 'stdout', 'airbrake' // This can be added to any log level, not only 'debug'
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>Once this is all in place, you should be able to test it out.</p>
+
+<h3>Testing</h3>
+
+<p>To test the Airbrake exception notification, an exception must be thrown in your application when running. A good way to do this (although not ideal) is to create a controller with an action that throws an exception. I added this action to an existing controller, which again isn't ideal.</p>
+
+<p>Here's an example controller and action:</p>
+
+<p>```
+class AirbrakeTestController {</p>
+
+<p>  def simulateError() {</p>
+
+<pre><code>session.myval = "Something in the Session!"
+throw new Exception("TestException ${System.currentTimeMillis()}")
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```</p>
+
+<p>Once this is created, run your application and visit <a href="http://localhost:8080/airbrakeTest/simulateError">http://localhost:8080/airbrakeTest/simulateError</a>. You should see a page similar to this:</p>
+
+<div style="padding: 20px; 
+      background: white; 
+      margin-top: 10px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;">
+  <img src="http://coderberry.me/images/posts/airbrake-grails-exception.png" style="display: block;"/>
+  <em>As you can see, I placed the action in another controller</em>
+</div>
+
+
+<p>Now log into Airbrake.io and you should see your exception listed.</p>
+
+<div style="padding: 20px; 
+      background: #DADADA; 
+      margin-top: 10px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;">
+  <img src="http://coderberry.me/images/posts/airbrake-airbrake-exception-list.png" style="display: block;"/>
+  <img src="http://coderberry.me/images/posts/airbrake-airbrake-exception.png" style="display: block;"/>
+</div>
+
+
+<p>The data provided in the backtrace is a little weak and unformatted, and you can't see anywhere the contents of the session. It does however notify you when an exception is thrown and performs the goodness that Airbrake provides.</p>
+
+<h3>Afterthoughts</h3>
+
+<p>The plugin I had submitted to the Grails plugin repository added a few extra goodies to the Airbrake notifications, primarily enhanced backtraces and session/request data. This isn't available in the Airbrake java library mentioned above.</p>
+
+<p>After submitting the request to the mailing list, I received a couple of questions to the validity of the plugin, and then... nothing. I replied with reasons it's worth it, but there was no acceptance in place. I guess I could have pushed it to brute force my plugin into the repository, but to what end? I have a strong background with <a href="http://coderberry.me/blog/categories/ruby/">Ruby</a> and <a href="http://shop.oreilly.com/product/9780596520717.do">Rails</a>, and am an active member of the <a href="http://utruby.org/">Ruby community</a>. Not once have I felt that my contribution to their community has been rejected. I can't help but feel this from my experience with the Grails community.</p>
+
+<p>That being said, I have worked with some of the core developers of Grails and they share my concerns. They have very little to do with it, and have little control to change things. The new changes at <a href="http://beta.grails.org/plugins">http://beta.grails.org</a> should promote more interaction in regards to plugins, but who knows.</p>
+
+<p>Here are my parting words:</p>
+
+<p><strong>Don't take the time to write a plugin which is intended for public use until AFTER you get it approved from the Grails developer mailing list.</strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Stupid Simple POST/GET with Groovy HTTPBuilder]]></title>
@@ -1036,93 +1171,6 @@ package org.example</p>
 
 <iframe src="http://www.slideshare.net/slideshow/embed_code/3261710" width="590" height="460" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Multi-Associative GORM Criteria with Projections]]></title>
-    <link href="http://coderberry.me/blog/2011/03/29/multi-associative-gorm-criteria-with-projections/"/>
-    <updated>2011-03-29T00:00:00-06:00</updated>
-    <id>http://coderberry.me/blog/2011/03/29/multi-associative-gorm-criteria-with-projections</id>
-    <content type="html"><![CDATA[<p>I have three domain classes: Lead, Submission and BuyerLog:</p>
-
-<p>``` java
-class Lead {
-  static hasMany = [ submissions: Submission ]
-  Date dateCreated
-  // ...
-}</p>
-
-<p>class Submission {
-  static belongsTo = [ lead: Lead ]
-  static hasMany = [ buyerLogs: BuyerLog ]
-  Lead lead
-  // ...
-}</p>
-
-<p>class BuyerLog {
-  static belongsTo = [ submission: Submission ]
-  Submission submission
-  String leadBuyer
-  // ...
-}
-```</p>
-
-<p>I have a need to get the number of duplicate leads which share the same leadBuyer (in the BuyerLog domain class). Here is the SQL:</p>
-
-<p>``` sql
-SELECT count(l.id)
-  FROM lead AS l, submission AS s, buyerLog as bl</p>
-
-<pre><code>WHERE l.id = s.leadId
-  AND s.id = bl.submissionId
-  AND bl.leadBuyer = $buyerName
-  AND l.id != $lead.id
-  AND l.dateCreated::date &gt; $daysAgo
-</code></pre>
-
-<p>```</p>
-
-<p>I want to do this using GORM / Criteria Builder. Here's my final code:</p>
-
-<p>``` java
-/<em>*
- * Count duplicate submissions within 45 days
- * SELECT count(l.id)
- *      FROM lead AS l, submission AS s, buyerLog as bl
- *      WHERE l.id = s.leadId
- *          AND s.id = bl.submissionId
- *          AND bl.leadBuyer = $buyerName
- *          AND l.id != $lead.id
- *          AND l.dateCreated::date > $daysAgo
- </em>/
-protected def Boolean isDuplicateSubmission(Lead lead, ArrayList<String> buyerNames) {
-  def isDuplicate = false
-  def daysAgo = new Date() - 45
-  def cnt = Lead.withCriteria {</p>
-
-<pre><code>not {
-  idEq(lead.id)
-}
-and {
-  le('dateCreated', daysAgo)
-  submissions {
-    buyerLogs {
-      inList('leadBuyer', buyerNames)
-    }
-  }
-}
-projections {
-  rowCount()
-}
-</code></pre>
-
-<p>  }
-  return (cnt > 0)
-}
-```</p>
-
-<p>Thanks to schmolly159 on the #grails freenode IRC channel for the examples and continued help.</p>
 ]]></content>
   </entry>
   

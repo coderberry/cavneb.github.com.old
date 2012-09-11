@@ -7,7 +7,7 @@
     <meta name="author" content="Eric Berry">
 
     
-    <meta name="description" content="Tools I Use as a Developer Like any craftsman, a developer has a toolbox filled with items that helps him perform his craft. At a recent &#8216;Tech &hellip;">
+    <meta name="description" content="Airbrake Exception Logging in Your Grails Application Recently I worked on migrating the Airbrake plugin written by Phuong LeCong to Grails version &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -80,6 +80,186 @@
 </script>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+    <h1 class="title"><a href="/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application/">Airbrake Exception Logging in Your Grails Application</a></h1>
+    <div class="entry">
+        <p>Recently I worked on migrating the Airbrake plugin written by <a href="https://github.com/plecong/grails-airbrake">Phuong LeCong</a> to Grails version 2.1 (<a href="https://github.com/cavneb/airbrake-grails">repo here</a>). After completing the plugin, I attempted to submit it to the Grails plugin repo via the <a href="http://grails.1312388.n4.nabble.com/Permission-to-publish-plugin-td4634449.html">developer mailing list</a>.</p>
+
+<p><a href="[@bostanio](http://twitter.com/bostanio">Jon Palmer</a>) brought to my attention that there is a Java library that is being used to accomplish this task. I had searched prior for a solution that would work with Grails, but I didn&#8217;t find any solid instructions on how to integrate the Java Airbrake library into my Grails apps.</p>
+
+<p>So here it is.</p>
+
+<h3>Installation</h3>
+
+<p>The Airbrake Java library exists in the Maven repo (<a href="http://mvnrepository.com/artifact/io.airbrake/airbrake-java/2.2.0">http://mvnrepository.com/artifact/io.airbrake/airbrake-java/2.2.0</a>) and can be installed by simple adding the following as a runtime dependency in your <code>BuildConfig.groovy</code> file:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dependencies {
+</span><span class='line'>    runtime 'io.airbrake:airbrake-java:2.2.0'
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next time your app compiles, the Airbrake library should be installed and ready to go.</p>
+
+<h3>Integration</h3>
+
+<p>It&#8217;s nearly as simple to integrate the Airbrake exception notification process into your Grails application. This is done by adding a log4j appender into your <code>Config.groovy</code> file. Make sure that you update the appender config with the correct project API key from Airbrake.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>log4j = {
+</span><span class='line'>  // Example of changing the log pattern for the default console appender:
+</span><span class='line'>  appenders {
+</span><span class='line'>    appender name: 'airbrake', new airbrake.AirbrakeAppender (
+</span><span class='line'>      api_key: 'API_KEY', // replace with your Airbrake API key
+</span><span class='line'>      env: ((Environment.current == Environment.PRODUCTION) ? 'Production' : 'Development')
+</span><span class='line'>    )
+</span><span class='line'>    ...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After the appender is in place, you need to let your Grails app know to use it as a global appender. Add <code>'airbrake'</code> to your root <code>debug</code> node:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>log4j = {
+</span><span class='line'>  // Example of changing the log pattern for the default console appender:
+</span><span class='line'>  appenders {
+</span><span class='line'>    appender new airbrake.AirbrakeAppender (
+</span><span class='line'>      name: 'airbrake', 
+</span><span class='line'>      api_key: 'API_KEY', // replace with your Airbrake API key
+</span><span class='line'>      env: ((Environment.current == Environment.PRODUCTION)  ? 'production' : 'development'),
+</span><span class='line'>      enabled: true
+</span><span class='line'>    )
+</span><span class='line'>    ...
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  root {
+</span><span class='line'>    debug 'stdout', 'airbrake' // This can be added to any log level, not only 'debug'
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once this is all in place, you should be able to test it out.</p>
+
+<h3>Testing</h3>
+
+<p>To test the Airbrake exception notification, an exception must be thrown in your application when running. A good way to do this (although not ideal) is to create a controller with an action that throws an exception. I added this action to an existing controller, which again isn&#8217;t ideal.</p>
+
+<p>Here&#8217;s an example controller and action:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class AirbrakeTestController {
+</span><span class='line'>
+</span><span class='line'>  def simulateError() {
+</span><span class='line'>    session.myval = "Something in the Session!"
+</span><span class='line'>    throw new Exception("TestException ${System.currentTimeMillis()}")
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once this is created, run your application and visit <a href="http://localhost:8080/airbrakeTest/simulateError">http://localhost:8080/airbrakeTest/simulateError</a>. You should see a page similar to this:</p>
+
+<div style="padding: 20px; 
+      background: white; 
+      margin-top: 10px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;">
+  <img src="/images/posts/airbrake-grails-exception.png" style="display: block;"/>
+  <em>As you can see, I placed the action in another controller</em>
+</div>
+
+
+<p>Now log into Airbrake.io and you should see your exception listed.</p>
+
+<div style="padding: 20px; 
+      background: #DADADA; 
+      margin-top: 10px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;">
+  <img src="/images/posts/airbrake-airbrake-exception-list.png" style="display: block;"/>
+  <img src="/images/posts/airbrake-airbrake-exception.png" style="display: block;"/>
+</div>
+
+
+<p>The data provided in the backtrace is a little weak and unformatted, and you can&#8217;t see anywhere the contents of the session. It does however notify you when an exception is thrown and performs the goodness that Airbrake provides.</p>
+
+<h3>Afterthoughts</h3>
+
+<p>The plugin I had submitted to the Grails plugin repository added a few extra goodies to the Airbrake notifications, primarily enhanced backtraces and session/request data. This isn&#8217;t available in the Airbrake java library mentioned above.</p>
+
+<p>After submitting the request to the mailing list, I received a couple of questions to the validity of the plugin, and then&#8230; nothing. I replied with reasons it&#8217;s worth it, but there was no acceptance in place. I guess I could have pushed it to brute force my plugin into the repository, but to what end? I have a strong background with <a href="http://coderberry.me/blog/categories/ruby/">Ruby</a> and <a href="http://shop.oreilly.com/product/9780596520717.do">Rails</a>, and am an active member of the <a href="http://utruby.org/">Ruby community</a>. Not once have I felt that my contribution to their community has been rejected. I can&#8217;t help but feel this from my experience with the Grails community.</p>
+
+<p>That being said, I have worked with some of the core developers of Grails and they share my concerns. They have very little to do with it, and have little control to change things. The new changes at <a href="http://beta.grails.org/plugins">http://beta.grails.org</a> should promote more interaction in regards to plugins, but who knows.</p>
+
+<p>Here are my parting words:</p>
+
+<p><strong>Don&#8217;t take the time to write a plugin which is intended for public use until AFTER you get it approved from the Grails developer mailing list.</strong></p>
+
+        
+        
+    </div>
+    <div class="meta">
+        <div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-11T14:34:00-06:00" pubdate data-updated="true">Sep 11<span>th</span>, 2012</time></div>
+        <div class="tags">
+
+<div class="cat">
+  
+    <a class='category' href='/blog/categories/grails/'>Grails</a>
+  
+</div>
+
+</div>
+        
+        <span class="comments"><a href="/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application/#disqus_thread">Comments</a></span>
+        
+    </div>
+</article>
 
 
     <article class="post">
@@ -1561,277 +1741,6 @@ The asset pipeline is powered by two technologies: <a href="https://github.com/s
 </div>
         
         <span class="comments"><a href="/blog/2012/04/24/asset-pipeline-for-dummies/#disqus_thread">Comments</a></span>
-        
-    </div>
-</article>
-
-
-    <article class="post">
-    <h1 class="title"><a href="/blog/2012/04/23/grails-domain-classes-and-enums/">Grails Domain Classes and Enums</a></h1>
-    <div class="entry">
-        <p>For a long time, I have been creating static int values to represent states in domain classes. For example, I would have something like the following:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">PluginPendingApproval</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">STATUS_PENDING</span>  <span class="o">=</span> <span class="mi">1</span>
-</span><span class='line'>  <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">STATUS_APPROVED</span> <span class="o">=</span> <span class="mi">2</span>
-</span><span class='line'>  <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">STATUS_REJECTED</span> <span class="o">=</span> <span class="mi">3</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">status</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">inList:</span> <span class="o">[</span>
-</span><span class='line'>      <span class="n">STATUS_PENDING_APPROVAL</span><span class="o">,</span> <span class="n">STATUS_APPROVED</span><span class="o">,</span> <span class="n">STATUS_REJECTED</span>
-</span><span class='line'>    <span class="o">]</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Peter Ledbrook ( <a href="https://twitter.com/#!/pledbrook">@pledbrook</a> ) gave me some tips on how to handle this better using <code>Enums</code>. Enum values should always be in uppercase letters because they are constants in the fixed set. If we were to refactor the code above, it would something more like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">PluginPendingApproval</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">enum</span> <span class="n">ApprovalStatus</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">PENDING</span><span class="o">,</span> <span class="n">APPROVED</span><span class="o">,</span> <span class="n">REJECTED</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">ApprovalStatus</span> <span class="n">status</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This works great for a single domain class, but what if I wanted to use the same Enum in two different domain classes. For example:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// PluginPendingApproval.groovy</span>
-</span><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">PluginPendingApproval</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span><span class="nl">pluginPendingApprovalRequests:</span> <span class="n">PluginPendingApprovalRequest</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">enum</span> <span class="n">ApprovalStatus</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">PENDING</span><span class="o">,</span> <span class="n">APPROVED</span><span class="o">,</span> <span class="n">REJECTED</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">ApprovalStatus</span> <span class="n">status</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// PluginPendingApprovalRequest.groovy</span>
-</span><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">PluginPendingApprovalRequest</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span><span class="nl">pluginPendingApproval:</span> <span class="n">PluginPendingApproval</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">enum</span> <span class="n">ApprovalStatus</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">PENDING</span><span class="o">,</span> <span class="n">APPROVED</span><span class="o">,</span> <span class="n">REJECTED</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">ApprovalStatus</span> <span class="n">status</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I could keep do it this way where I have the enum code duplicated in two places, but that doesn&#8217;t follow the DRY principal.</p>
-
-<p>Let&#8217;s refactor this and create a new Enum class that both domain classes can use:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">public</span> <span class="kd">enum</span> <span class="n">ApprovalStatusEnum</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">PENDING</span><span class="o">,</span> <span class="n">APPROVED</span><span class="o">,</span> <span class="n">REJECTED</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now both of my domain classes can access the same Enum:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">// PluginPendingApproval.groovy</span>
-</span><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">PluginPendingApproval</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span><span class="nl">pluginPendingApprovalRequests:</span> <span class="n">PluginPendingApprovalRequest</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">ApprovalStatus</span> <span class="n">status</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// PluginPendingApprovalRequest.groovy</span>
-</span><span class='line'><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">class</span> <span class="nc">PluginPendingApprovalRequest</span> <span class="o">{</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span><span class="nl">pluginPendingApproval:</span> <span class="n">PluginPendingApproval</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">ApprovalStatus</span> <span class="n">status</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>For more information on Enums in Groovy, see <a href="http://groovy.codehaus.org/Using+Enums">http://groovy.codehaus.org/Using+Enums</a></p>
-
-        
-        
-    </div>
-    <div class="meta">
-        <div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-23T00:00:00-06:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2012</time></div>
-        <div class="tags">
-
-<div class="cat">
-  
-    <a class='category' href='/blog/categories/grails/'>Grails</a>, <a class='category' href='/blog/categories/groovy/'>Groovy</a>
-  
-</div>
-
-</div>
-        
-        <span class="comments"><a href="/blog/2012/04/23/grails-domain-classes-and-enums/#disqus_thread">Comments</a></span>
         
     </div>
 </article>

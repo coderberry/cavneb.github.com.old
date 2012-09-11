@@ -33,9 +33,11 @@ It's nearly as simple to integrate the Airbrake exception notification process i
 log4j = {
   // Example of changing the log pattern for the default console appender:
   appenders {
-    appender name: 'airbrake', new airbrake.AirbrakeAppender (
+    appender new airbrake.AirbrakeAppender (
+      name: 'airbrake', 
       api_key: 'API_KEY', // replace with your Airbrake API key
-      env: ((Environment.current == Environment.PRODUCTION) ? 'Production' : 'Development')
+      env: ((Environment.current == Environment.PRODUCTION)  ? 'production' : 'development'),
+      enabled: true
     )
     ...
 ```

@@ -7,6 +7,12 @@ categories:
 - Grails
 ---
 
+<blockquote>
+  <h4 style="margin-top: 0px;">Disclaimer</h4>
+  This article covers the use of the Airbrake Java library. Since then, I have published a Grails plugin which provides additional data to
+  Airbrake. The plugin can be found at <a href="http://cavneb.github.com/airbrake-grails/">http://cavneb.github.com/airbrake-grails</a>
+</blockquote>
+
 Recently I worked on migrating the Airbrake plugin written by [Phuong LeCong](https://github.com/plecong/grails-airbrake) to Grails version 2.1 ([repo here](https://github.com/cavneb/airbrake-grails)). After completing the plugin, I attempted to submit it to the Grails plugin repo via the [developer mailing list](http://grails.1312388.n4.nabble.com/Permission-to-publish-plugin-td4634449.html).
 
 [Jon Palmer]([@bostanio](http://twitter.com/bostanio)) brought to my attention that there is a Java library that is being used to accomplish this task. I had searched prior for a solution that would work with Grails, but I didn't find any solid instructions on how to integrate the Java Airbrake library into my Grails apps.

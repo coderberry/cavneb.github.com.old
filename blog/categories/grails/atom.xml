@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Grails | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/grails/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-09-11T16:47:55-06:00</updated>
+  <updated>2012-09-12T14:23:26-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -18,7 +18,14 @@
     <link href="http://coderberry.me/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application/"/>
     <updated>2012-09-11T14:34:00-06:00</updated>
     <id>http://coderberry.me/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application</id>
-    <content type="html"><![CDATA[<p>Recently I worked on migrating the Airbrake plugin written by <a href="https://github.com/plecong/grails-airbrake">Phuong LeCong</a> to Grails version 2.1 (<a href="https://github.com/cavneb/airbrake-grails">repo here</a>). After completing the plugin, I attempted to submit it to the Grails plugin repo via the <a href="http://grails.1312388.n4.nabble.com/Permission-to-publish-plugin-td4634449.html">developer mailing list</a>.</p>
+    <content type="html"><![CDATA[<blockquote>
+  <h4 style="margin-top: 0px;">Disclaimer</h4>
+  This article covers the use of the Airbrake Java library. Since then, I have published a Grails plugin which provides additional data to
+  Airbrake. The plugin can be found at <a href="http://cavneb.github.com/airbrake-grails/">http://cavneb.github.com/airbrake-grails</a>
+</blockquote>
+
+
+<p>Recently I worked on migrating the Airbrake plugin written by <a href="https://github.com/plecong/grails-airbrake">Phuong LeCong</a> to Grails version 2.1 (<a href="https://github.com/cavneb/airbrake-grails">repo here</a>). After completing the plugin, I attempted to submit it to the Grails plugin repo via the <a href="http://grails.1312388.n4.nabble.com/Permission-to-publish-plugin-td4634449.html">developer mailing list</a>.</p>
 
 <p><a href="[@bostanio](http://twitter.com/bostanio">Jon Palmer</a>) brought to my attention that there is a Java library that is being used to accomplish this task. I had searched prior for a solution that would work with Grails, but I didn't find any solid instructions on how to integrate the Java Airbrake library into my Grails apps.</p>
 

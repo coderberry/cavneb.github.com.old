@@ -7,7 +7,7 @@
     <meta name="author" content="Eric Berry">
 
     
-    <meta name="description" content="Airbrake Exception Logging in Your Grails Application Disclaimer This article covers the use of the Airbrake Java library. Since then, I have &hellip;">
+    <meta name="description" content="Airbrake Exception Logging in Your Grails Application Airbrake has a Java library that can be used in your Grails application fairly easily. A &hellip;">
     
     <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1">
 
@@ -85,36 +85,27 @@
     <article class="post">
     <h1 class="title"><a href="/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application/">Airbrake Exception Logging in Your Grails Application</a></h1>
     <div class="entry">
-        <blockquote>
-  <h4 style="margin-top: 0px;">Disclaimer</h4>
-  This article covers the use of the Airbrake Java library. Since then, I have published a Grails plugin which provides additional data to
-  Airbrake. The plugin can be found at <a href="http://cavneb.github.com/airbrake-grails/">http://cavneb.github.com/airbrake-grails</a>
-</blockquote>
+        <p>Airbrake has a Java library that can be used in your Grails application fairly easily. A couple of items that the library doesn&#8217;t do is make it simple to pass session / request data to Airbrake. I also found that the backtrace is somewhat jumbled when viewing it on Airbrake. <a href="https://github.com/plecong/grails-airbrake">Phuong LeCong</a> wrote an excellent plugin to enhance the library. I have recently published an <a href="https://github.com/cavneb/airbrake-grails">updated version</a> of the plugin (with Phuong&#8217;s consent) to the <a href="http://grails.org/plugin/airbrake">Grails plugin repository</a>.</p>
 
-
-<p>Recently I worked on migrating the Airbrake plugin written by <a href="https://github.com/plecong/grails-airbrake">Phuong LeCong</a> to Grails version 2.1 (<a href="https://github.com/cavneb/airbrake-grails">repo here</a>). After completing the plugin, I attempted to submit it to the Grails plugin repo via the <a href="http://grails.1312388.n4.nabble.com/Permission-to-publish-plugin-td4634449.html">developer mailing list</a>.</p>
-
-<p><a href="[@bostanio](http://twitter.com/bostanio">Jon Palmer</a>) brought to my attention that there is a Java library that is being used to accomplish this task. I had searched prior for a solution that would work with Grails, but I didn&#8217;t find any solid instructions on how to integrate the Java Airbrake library into my Grails apps.</p>
-
-<p>So here it is.</p>
+<p>Let&#8217;s take a look at how simple it is to use.</p>
 
 <h3>Installation</h3>
 
-<p>The Airbrake Java library exists in the Maven repo (<a href="http://mvnrepository.com/artifact/io.airbrake/airbrake-java/2.2.0">http://mvnrepository.com/artifact/io.airbrake/airbrake-java/2.2.0</a>) and can be installed by simple adding the following as a runtime dependency in your <code>BuildConfig.groovy</code> file:</p>
+<p>Installation is very simple. Simply add the plugin to your <code>BuildConfig.groovy</code> file:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>dependencies {
-</span><span class='line'>    runtime 'io.airbrake:airbrake-java:2.2.0'
+</pre></td><td class='code'><pre><code class=''><span class='line'>plugins {
+</span><span class='line'>    runtime ":airbrake:0.4"
 </span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Next time your app compiles, the Airbrake library should be installed and ready to go.</p>
+<p>Next time your app compiles, the plugin should be installed and ready to go.</p>
 
 <h3>Integration</h3>
 
-<p>It&#8217;s nearly as simple to integrate the Airbrake exception notification process into your Grails application. This is done by adding a log4j appender into your <code>Config.groovy</code> file. Make sure that you update the appender config with the correct project API key from Airbrake.</p>
+<p>It&#8217;s nearly as simple to integrate the notification process into your Grails application. This is done by adding a log4j appender into your <code>Config.groovy</code> file. Make sure that you update the appender config with the correct project API key from Airbrake.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -126,13 +117,17 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>log4j = {
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def isProd = Environment.current == Environment.PRODUCTION
+</span><span class='line'>
+</span><span class='line'>log4j = {
 </span><span class='line'>  // Example of changing the log pattern for the default console appender:
 </span><span class='line'>  appenders {
-</span><span class='line'>    appender new airbrake.AirbrakeAppender (
+</span><span class='line'>    appender grails.plugins.airbrake.AirbrakeAppender (
 </span><span class='line'>      name: 'airbrake', 
 </span><span class='line'>      api_key: 'API_KEY', // replace with your Airbrake API key
-</span><span class='line'>      env: ((Environment.current == Environment.PRODUCTION)  ? 'production' : 'development'),
+</span><span class='line'>      env: (isProd ? 'production' : 'development'),
 </span><span class='line'>      enabled: true
 </span><span class='line'>    )
 </span><span class='line'>    ...</span></code></pre></td></tr></table></div></figure>
@@ -156,13 +151,17 @@
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>log4j = {
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def isProd = Environment.current == Environment.PRODUCTION
+</span><span class='line'>
+</span><span class='line'>log4j = {
 </span><span class='line'>  // Example of changing the log pattern for the default console appender:
 </span><span class='line'>  appenders {
-</span><span class='line'>    appender new airbrake.AirbrakeAppender (
+</span><span class='line'>    appender grails.plugins.airbrake.AirbrakeAppender (
 </span><span class='line'>      name: 'airbrake', 
 </span><span class='line'>      api_key: 'API_KEY', // replace with your Airbrake API key
-</span><span class='line'>      env: ((Environment.current == Environment.PRODUCTION)  ? 'production' : 'development'),
+</span><span class='line'>      env: (isProd ? 'production' : 'development'),
 </span><span class='line'>      enabled: true
 </span><span class='line'>    )
 </span><span class='line'>    ...
@@ -178,29 +177,9 @@
 
 <h3>Testing</h3>
 
-<p>To test the Airbrake exception notification, an exception must be thrown in your application when running. A good way to do this (although not ideal) is to create a controller with an action that throws an exception. I added this action to an existing controller, which again isn&#8217;t ideal.</p>
+<p>To test the Airbrake exception notification, an exception must be thrown in your application when running. The plugin offers a simple way to generate an exception without mucking around with your code.</p>
 
-<p>Here&#8217;s an example controller and action:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class AirbrakeTestController {
-</span><span class='line'>
-</span><span class='line'>  def simulateError() {
-</span><span class='line'>    session.myval = "Something in the Session!"
-</span><span class='line'>    throw new Exception("TestException ${System.currentTimeMillis()}")
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Once this is created, run your application and visit <a href="http://localhost:8080/airbrakeTest/simulateError">http://localhost:8080/airbrakeTest/simulateError</a>. You should see a page similar to this:</p>
+<p>To force an exception, run your application and visit <a href="http://localhost:8080/airbrakeTest/simulateError">http://localhost:8080/airbrakeTest/throwException</a>. You should see a page similar to this:</p>
 
 <div style="padding: 20px; 
       background: white; 
@@ -209,7 +188,6 @@
       -moz-border-radius: 5px;
       border-radius: 5px;">
   <img src="/images/posts/airbrake-grails-exception.png" style="display: block;"/>
-  <em>As you can see, I placed the action in another controller</em>
 </div>
 
 
@@ -226,19 +204,9 @@
 </div>
 
 
-<p>The data provided in the backtrace is a little weak and unformatted, and you can&#8217;t see anywhere the contents of the session. It does however notify you when an exception is thrown and performs the goodness that Airbrake provides.</p>
+<p>As you can see, not only is the stacktrace available, but also the request parameters and the session data.</p>
 
-<h3>Afterthoughts</h3>
-
-<p>The plugin I had submitted to the Grails plugin repository added a few extra goodies to the Airbrake notifications, primarily enhanced backtraces and session/request data. This isn&#8217;t available in the Airbrake java library mentioned above.</p>
-
-<p>After submitting the request to the mailing list, I received a couple of questions to the validity of the plugin, and then&#8230; nothing. I replied with reasons it&#8217;s worth it, but there was no acceptance in place. I guess I could have pushed it to brute force my plugin into the repository, but to what end? I have a strong background with <a href="https://www.google.com/#q=%22eric+berry%22+%2B+ruby">Ruby</a> and <a href="http://shop.oreilly.com/product/9780596520717.do">Rails</a>, and am an active member of the <a href="http://utruby.org/">Ruby community</a>. Not once have I felt that my contribution to their community has been rejected. I can&#8217;t help but feel this from my experience with the Grails community.</p>
-
-<p>That being said, I have worked with some of the core developers of Grails and they share my concerns. They have very little to do with it, and have little control to change things. The new changes at <a href="http://beta.grails.org/plugins">http://beta.grails.org</a> should promote more interaction in regards to plugins, but who knows.</p>
-
-<p>Here are my parting words:</p>
-
-<p><strong>Don&#8217;t take the time to write a plugin which is intended for public use until AFTER you get it approved from the Grails developer mailing list.</strong></p>
+<p>I wanted to thank <a href="https://github.com/plecong/grails-airbrake">Phuong LeCong</a> for his hard work on this. I also appreciate the Grails community, especially the core contributors for the hard work they do to keep us all happy developers.</p>
 
         
         

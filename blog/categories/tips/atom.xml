@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tips | coderberry.me]]></title>
   <link href="http://coderberry.me/blog/categories/tips/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-09-13T13:41:53-06:00</updated>
+  <updated>2012-10-09T16:50:27-06:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -12,6 +12,82 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Simple fix for pagination with Twitter Bootstrap]]></title>
+    <link href="http://coderberry.me/blog/2012/10/09/simple-fix-for-pagination-with-twitter-bootstrap/"/>
+    <updated>2012-10-09T16:40:00-06:00</updated>
+    <id>http://coderberry.me/blog/2012/10/09/simple-fix-for-pagination-with-twitter-bootstrap</id>
+    <content type="html"><![CDATA[<p>As a Rails guy, I always perform my table pagination using mislav's <a href="https://github.com/mislav/will_paginate">will_paginate</a> gem. However, when I use it combined with Twitter Bootstrap, I get an undesired result:</p>
+
+<p><img src="/images/posts/pagination-bad.png"></p>
+
+<p>There is a very simple fix for this which doesn't require using an <a href="https://github.com/yrgoldteeth/bootstrap-will_paginate">additional gem</a>.</p>
+
+<p>Add the following CSS to your application:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>assets/stylesheets/pagination_fix.css  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="o">&lt;/</span><span class="nt">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nt">pre</span><span class="o">&gt;&lt;</span><span class="nt">code</span><span class="o">&gt;//</span><span class="nt">-------------------------------------------------------------------------------</span>
+</span><span class='line'><span class="o">//</span>   <span class="nt">Pagination</span> <span class="nt">fix</span> <span class="nt">for</span> <span class="nt">will_paginate</span> <span class="nt">and</span> <span class="nt">bootstrap</span>
+</span><span class='line'><span class="o">//</span><span class="nt">-------------------------------------------------------------------------------</span>
+</span><span class='line'>
+</span><span class='line'><span class="nc">.pagination</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">span</span><span class="o">.</span><span class="n">disabled</span> <span class="err">{</span>
+</span><span class='line'>    <span class="k">color</span><span class="o">:</span> <span class="m">#aaa</span> <span class="cp">!important</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nt">em</span><span class="nc">.current</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">float</span><span class="o">:</span> <span class="k">left</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">padding</span><span class="o">:</span> <span class="m">0</span> <span class="m">14px</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">line-height</span><span class="o">:</span> <span class="m">38px</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">text-decoration</span><span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">background-color</span><span class="o">:</span> <span class="nb">white</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">border</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="m">#DDD</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">border-left-width</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nc">.previous_page</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">border-left</span><span class="o">:</span> <span class="m">1px</span> <span class="k">solid</span> <span class="m">#ddd</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="err">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="nt">code</span><span class="o">&gt;&lt;/</span><span class="nt">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nt">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Refresh your page and the pagination issues should be resolved:</p>
+
+<p><img src="/images/posts/pagination-good.png"></p>
+
+<p>Hope this helps!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Tools I use as a developer]]></title>

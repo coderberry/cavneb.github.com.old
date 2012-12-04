@@ -4,7 +4,7 @@
   <title><![CDATA[coderberry.me]]></title>
   <link href="http://coderberry.me/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-10-09T16:50:27-06:00</updated>
+  <updated>2012-12-04T07:47:41-07:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -77,6 +77,77 @@
 <p><img src="http://coderberry.me/images/posts/pagination-good.png"></p>
 
 <p>Hope this helps!</p>
+
+<h4>Update (Dec 4, 2012):</h4>
+
+<p>I recently attempted to use the will_paginate gem with the latest version of Bootstrap (v2.2.1) and the pagination no longer
+rendered using the <code>&lt;li&gt;..&lt;/li&gt;</code> elements. To fix this I added the following into an initializer:</p>
+
+<figure class='code'><figcaption><span>config/initializers/will_paginate.rb  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">WillPaginate</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">WillPaginate</span>
+</span><span class='line'>    <span class="k">module</span> <span class="nn">ActionView</span>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">will_paginate</span><span class="p">(</span><span class="n">collection</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>        <span class="n">options</span><span class="o">[</span><span class="ss">:renderer</span><span class="o">]</span> <span class="o">||=</span> <span class="no">BootstrapLinkRenderer</span>
+</span><span class='line'>        <span class="k">super</span><span class="o">.</span><span class="n">try</span> <span class="ss">:html_safe</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">class</span> <span class="nc">BootstrapLinkRenderer</span> <span class="o">&lt;</span> <span class="no">LinkRenderer</span>
+</span><span class='line'>        <span class="kp">protected</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">def</span> <span class="nf">html_container</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</span><span class='line'>          <span class="n">tag</span> <span class="ss">:div</span><span class="p">,</span> <span class="n">tag</span><span class="p">(</span><span class="ss">:ul</span><span class="p">,</span> <span class="n">html</span><span class="p">),</span> <span class="n">container_attributes</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">def</span> <span class="nf">page_number</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+</span><span class='line'>          <span class="n">tag</span> <span class="ss">:li</span><span class="p">,</span> <span class="n">link</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="ss">:rel</span> <span class="o">=&gt;</span> <span class="n">rel_value</span><span class="p">(</span><span class="n">page</span><span class="p">)),</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;active&#39;</span> <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="n">current_page</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">def</span> <span class="nf">previous_or_next_page</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">classname</span><span class="p">)</span>
+</span><span class='line'>          <span class="n">tag</span> <span class="ss">:li</span><span class="p">,</span> <span class="n">link</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">page</span> <span class="o">||</span> <span class="s1">&#39;#&#39;</span><span class="p">),</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">classname</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="o">]</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;disabled&#39;</span> <span class="k">unless</span> <span class="n">page</span><span class="p">)</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">def</span> <span class="nf">gap</span>
+</span><span class='line'>          <span class="n">tag</span> <span class="ss">:li</span><span class="p">,</span> <span class="n">link</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">),</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s1">&#39;disabled&#39;</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This tip was provided by <a href="https://github.com/houen">Søren Houen</a> and found on the <a href="http://railscasts.com/episodes/329-more-on-twitter-bootstrap?view=comments">Railscasts comments</a>.</p>
 ]]></content>
   </entry>
   

@@ -46,30 +46,13 @@ Eric is an avid [contributor](https://github.com/cavneb) to open source software
   <cite>- Grant Chandler, North America at Finch, LLC</cite>
 </p>
 
-### Portfolio &amp; Experience
+### Portfolio (just a few of them)
 
-<div class="website" style="background: url(images/portfolio-sweepstakes.png) 0 0 no-repeat;">
-  <p style="margin-left: 210px;">
-    <a href="http://apps.facebook.com/hooplasoft_giveaways/board">Facebook Sweepstakes</a> is a Facebook application that has become a pet project. It is a community of 'sweekstalkers' who enter giveaway after giveaway. I built the software in Rails/MySQL. There are currently over 70,000 unique monthly users to date.
-  </p>
-</div>
+[Facebook Sweepstakes](http://apps.facebook.com/hooplasoft_giveaways/board) is a Facebook application that has become a pet project. It is a community of 'sweekstalkers' who enter giveaway after giveaway. I built the software in Rails/MySQL. There are currently over 70,000 unique monthly users to date.
 
-<div class="website" style="background: url(images/portfolio-reservationcounter.png) 0 0 no-repeat;">
-  <p style="margin-left: 210px;">
-    <a href="http://www.reservationcounter.com">Reservation Counter</a> is a low-fare hotel reservation application which ties in with the Expedia.com affiliate interface. I assisted in the design and built it with Rails/MySQL.
-  </p>
-</div>
+[Reservation Counter](http://www.reservationcounter.com) is a low-fare hotel reservation application which ties in with the Expedia.com affiliate interface. I assisted in the design and built it with Rails/MySQL.
 
-<div class="website" style="background: url(images/portfolio-cropchocolate.png) 0 0 no-repeat;">
-  <p style="margin-left: 210px;">
-    <a href="http://www.cropchocolate.com">Crop Chocolate</a> is a 'deal of the day' website for the scrapbooker. This application includes a full cart system with checkout, merchant account integration, logistics integration, extensive reporting and much more. I was provided the photoshop artwork and built the site front and back with Rails/MySQL.
-  </p>
-</div>
+[Crop Chocolate](http://www.cropchocolate.com) is a 'deal of the day' website for the scrapbooker. This application includes a full cart system with checkout, merchant account integration, logistics integration, extensive reporting and much more. I was provided the photoshop artwork and built the site front and back with Rails/MySQL.
 
-<div class="website" style="background: url(images/portfolfio-flobridge.png) 0 0 no-repeat;">
-  <p style="margin-left: 210px;">
-    <a href="http://www.flobridge.com">FloBridge</a> is a direct lender for short-term payday loans that needed a site for developing its own leads. If the lead does not qualify via FloBridge, they are re-sold to a buyer tree. I wrote this using Rails/MySQL.
-  </p>
-</div>
-
+[FloBridge](http://www.flobridge.com) is a direct lender for short-term payday loans that needed a site for developing its own leads. If the lead does not qualify via FloBridge, they are re-sold to a buyer tree. I wrote this using Rails/MySQL.
 

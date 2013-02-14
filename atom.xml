@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Eric Berry]]></title>
+  <title><![CDATA[coderberry]]></title>
   <link href="http://coderberry.me/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2012-12-16T12:23:27-07:00</updated>
+  <updated>2013-02-13T21:56:24-07:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -12,6 +12,283 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Bootstrapping AngularJS with Yeoman]]></title>
+    <link href="http://coderberry.me/blog/2013/02/13/bootstrapping-angularjs-with-yeoman/"/>
+    <updated>2013-02-13T16:13:00-07:00</updated>
+    <id>http://coderberry.me/blog/2013/02/13/bootstrapping-angularjs-with-yeoman</id>
+    <content type="html"><![CDATA[<p><em>Note: This post is incomplete and will be worked on over the next week</em></p>
+
+<div style="width: 242px;
+      height: 388px;
+      margin: 10px 30px 10px 0;
+      float: left;
+      background: transparent url(/images/posts/angular-yeoman.png) top left no-repeat;">
+</div>
+
+
+<p><strong><a href="http://angularjs.org/">AngularJS</a> is awesome.</strong></p>
+
+<p>If you are here, you already know that. If not, <a href="http://www.youtube.com/user/angularjs">watch these videos</a>.</p>
+
+<p><strong><a href="http://yeoman.io">Yeoman</a> is awesome.</strong></p>
+
+<p>If you are here, you <em>might</em> not know that already. It is similar to <a href="http://middlemanapp.com">middleman</a> but is Node driven instead of ruby. For a kickstart, watch the <a href="http://www.youtube.com/watch?feature=player_embedded&amp;v=vFacaBinGZ0">screencast by Addi Osmani</a>.</p>
+
+<p>Yeoman also provides support for easy scaffolding, auto-compilation of CoffeeScript and Compass, live preview servers and more. Yup, I was just listing some of the features from <a href="http://yeoman.io/">their site</a>.</p>
+
+<p>Combine these together and you have an excellent solution to bootstrapping your AngularJS applications.</p>
+
+<h2>Install Yeoman</h2>
+
+<p>Install Yeoman with the following command:</p>
+
+<pre><code>$ curl -L get.yeoman.io | bash
+</code></pre>
+
+<p>Once this is done, you can confirm the install and version:</p>
+
+<pre><code>$ yeoman --version
+yeoman  v0.9.1
+</code></pre>
+
+<h2>AngularJS Generators</h2>
+
+<p>The generators that Yeoman provides for AngularJS can be found on <a href="https://github.com/yeoman/generator-angular">GitHub</a>. To view the available generators, type <code>$ yeoman init --help</code>. Here are the Angular related generators</p>
+
+<h4>angular:controller</h4>
+
+<pre><code>Usage:
+  yeoman init angular:controller NAME [options]
+
+Options:
+  -h, --help  # Print generator's options and usage  
+              # Default: false
+
+Description:
+    Creates a new Angular controller
+
+Example:
+    yeoman init angular:controller Thing
+
+    This will create:
+        app/scripts/controllers/thing-ctrl.js
+</code></pre>
+
+<h4>angular:filter</h4>
+
+<pre><code>Usage:
+  yeoman init angular:filter NAME [options]
+
+Options:
+  -h, --help  # Print generator's options and usage  
+              # Default: false
+
+Description:
+    Creates a new AngularJS filter
+
+Example:
+    yeoman init angular:filter thing
+
+    This will create:
+        app/scripts/filters/thing.js
+</code></pre>
+
+<h4>angular:route</h4>
+
+<pre><code>Usage:
+  yeoman init angular:route NAME [options]
+
+Options:
+  -h, --help                # Print generator's options and usage  
+                            # Default: false
+      --angular:controller  # Angular:controller to be invoked     
+                            # Default: 
+      --angular:view        # Angular:view to be invoked           
+                            # Default: 
+
+Description:
+    Creates a new AngularJS route
+
+Example:
+    yeoman init angular:route thing
+
+    This will create:
+        app/scripts/controllers/thing.js
+        app/views/thing.html
+    And add routing to:
+        app.js
+</code></pre>
+
+<h4>angular:service</h4>
+
+<pre><code>Usage:
+  yeoman init angular:service NAME [type] [options]
+
+Options:
+  -h, --help  # Print generator's options and usage  
+              # Default: false
+
+Description:
+    Creates a new AngularJS service.
+    Docs: http://docs.angularjs.org/guide/dev_guide.services.creating_services
+
+Example:
+    yeoman init angular:service thing
+
+    This will create:
+        app/scripts/services/thing.js
+</code></pre>
+
+<h4>angular:view</h4>
+
+<pre><code>Usage:
+  yeoman init angular:view NAME [options]
+
+Options:
+  -h, --help  # Print generator's options and usage  
+              # Default: false
+
+Description:
+    Creates a new AngularJS view
+
+Example:
+    yeoman init angular:view Thing
+
+    This will create:
+        app/scripts/views/thing.html
+</code></pre>
+
+<h4>angular:directive</h4>
+
+<pre><code>Usage:
+  yeoman init angular:directive NAME [options]
+
+Options:
+  -h, --help  # Print generator's options and usage  
+              # Default: false
+
+Description:
+    Creates a new Angular directive
+
+Example:
+    yeoman init angular:directive thing
+
+    This will create:
+        app/scripts/directives/thing.js
+</code></pre>
+
+<h4>angular:app</h4>
+
+<pre><code>Usage:
+  yeoman init angular:app [options]
+
+Options:
+  -h, --help  # Print generator's options and usage  
+              # Default: false  
+
+Description:
+    Create a base Angular application
+
+Example:
+    yeoman init angular:app
+
+    This will create:
+        app/.htaccess
+        app/404.html
+        app/favicon.ico
+        app/robots.txt
+        app/scripts/vendor/angular.js
+        app/scripts/vendor/angular.min.js
+        app/styles/main.css
+        app/views/main.html
+        Gruntfile.js
+        package.json
+        test/lib/angular-mocks.js
+        app/scripts/thing.js
+        app/index.html
+</code></pre>
+
+<h4>angular:all</h4>
+
+<pre><code>Usage:
+  yeoman init angular:all [options]
+
+Options:
+  -h, --help                # Print generator's options and usage  
+                            # Default: false
+      --angular:app         # Angular:app to be invoked            
+                            # Default: 
+      --angular:controller  # Angular:controller to be invoked     
+                            # Default: 
+      --testacular:app      # Testacular:app to be invoked         
+                            # Default: 
+
+Description:
+    Creates a complete starter Angular application with a main 
+    controller, view and tests
+
+Example:
+    yeoman init angular
+
+    This will create:
+        app/.htaccess
+        app/404.html
+        app/favicon.ico
+        app/robots.txt
+        app/scripts/vendor/angular.js
+        app/scripts/vendor/angular.min.js
+        app/styles/main.css
+        app/views/main.html
+        Gruntfile.js
+        package.json
+        test/lib/angular-mocks.js
+        app/scripts/thing.js
+        app/index.html
+        app/scripts/controllers/main.js
+        test/spec/controllers/main.js
+        testacular.conf.js
+</code></pre>
+
+<h2>Bootstrap your app</h2>
+
+<div style="width: 170px;
+      height: 200px;
+      margin: 10px 0 10px 30px;
+      float: right;
+      background: transparent url(/images/posts/instant-gratification.png) top left no-repeat;">
+</div>
+
+
+<p>The first thing that must be done is create a base folder for the application.</p>
+
+<pre><code>$ mkdir my_app
+$ cd my_app/
+</code></pre>
+
+<p>Now run the <strong>angular:all</strong> generator:</p>
+
+<pre><code>$ yeoman init angular:all
+</code></pre>
+
+<p>Finally, start up your server by running</p>
+
+<pre><code>$ yeoman server
+</code></pre>
+
+<p>Now when you make code changes, it will update live to the app.</p>
+
+<h2>TBD</h2>
+
+<ul>
+<li>Enhance the documentation listed above.</li>
+<li>Show how to use the yo CLI tool</li>
+<li>Use yeoman to create CoffeeScript instead of JavaScript</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Simple fix for pagination with Twitter Bootstrap]]></title>
@@ -3330,108 +3607,6 @@ an issue. Here is the code:</p>
 
 
 <p>I realize this is probably the hard way, but hey, it&#8217;s a start. Please post any plugins or alternatives to doing this if you know of any.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating Custom SOAP Requests with Ruby and Net::HTTP]]></title>
-    <link href="http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http/"/>
-    <updated>2008-12-19T00:00:00-07:00</updated>
-    <id>http://coderberry.me/blog/2008/12/19/creating-custom-soap-requests-with-ruby-and-net-http</id>
-    <content type="html"><![CDATA[<p><img src="http://coderberry.me/images/posts/golf_scale.jpg"></p>
-
-<p>I interviewed at a company a while ago and one of the questions they asked me was the familiar &#8220;You have 8 golf balls and a justice scale. One of the golf balls has a bubble in it making it a tiny bit lighter, but you can&#8217;t tell by looking at it or holding it. How many times do you need to use the scale in order to find the defective ball?&#8221;. I left the interview thinking that the answer was 3. After about 3 hours of thinking about it, I realized that the answer was 2 tries.</p>
-
-<p>The reason I share this with you is because today I found the answer to something that I&#8217;ve been thinking about for much longer than 3 hours. For about 1 1/2 years, I have been trying to find a good way to simply post a SOAP request via ruby without having to use SOAP4r or WSDL&#8217;s. Some of you might find this a bit odd that it took me this long to figure this out, but then again, it&#8217;s almost impossible to find any examples of this online.</p>
-
-<p>Enough history. Let&#8217;s get to the code.</p>
-
-<p>In my book, <a href="http://www.amazon.com/gp/product/0596520700?ie=UTF8&amp;tag=kobu-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0596520700">Rails Pocket Reference</a>, I have a section about using SOAP. In the example, I used the soap/wsdlDriver library to parse a WSDL from GeoCoder.us, a free US address geocoder tool. Instead of using the WSDL, you can access the response directly.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
-</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;net/https&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># Create te http object</span>
-</span><span class='line'><span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;rpc.geocoder.us&#39;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
-</span><span class='line'><span class="n">http</span><span class="o">.</span><span class="n">use_ssl</span> <span class="o">=</span> <span class="kp">false</span>
-</span><span class='line'><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/service/soap/&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># Create the SOAP Envelope</span>
-</span><span class='line'><span class="n">data</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">EOF</span>
-</span><span class='line'><span class="sh">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="sh">&lt;SOAP-ENV:Envelope</span>
-</span><span class='line'><span class="sh">  xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
-</span><span class='line'><span class="sh">  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
-</span><span class='line'><span class="sh">  xmlns:SOAP-ENC=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot;</span>
-</span><span class='line'><span class="sh">  SOAP-ENV:encodingStyle=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot;</span>
-</span><span class='line'><span class="sh">  xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;</span>
-</span><span class='line'><span class="sh">  &lt;SOAP-ENV:Body&gt;</span>
-</span><span class='line'><span class="sh">    &lt;m:geocode xmlns:m=&quot;http://rpc.geocoder.us/Geo/Coder/US/&quot;&gt;</span>
-</span><span class='line'><span class="sh">      &lt;location xsi:type=&quot;xsd:string&quot;&gt;1005 Gravenstein Highway North Sebastopol, CA 95472&lt;/location&gt;</span>
-</span><span class='line'><span class="sh">    &lt;/m:geocode&gt;</span>
-</span><span class='line'><span class="sh">  &lt;/SOAP-ENV:Body&gt;</span>
-</span><span class='line'><span class="sh">&lt;/SOAP-ENV:Envelope&gt;</span>
-</span><span class='line'><span class="no">EOF</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># Set Headers</span>
-</span><span class='line'><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>  <span class="s1">&#39;Referer&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;http://www.appfusion.net&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/xml&#39;</span><span class="p">,</span>
-</span><span class='line'>  <span class="s1">&#39;Host&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;rpc.geocoder.us&#39;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># Post the request</span>
-</span><span class='line'><span class="n">resp</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1"># Output the results</span>
-</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Code = &#39;</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">code</span>
-</span><span class='line'><span class="nb">puts</span> <span class="s1">&#39;Message = &#39;</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">message</span>
-</span><span class='line'><span class="n">resp</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39; = &#39;</span> <span class="o">+</span> <span class="n">val</span> <span class="p">}</span>
-</span><span class='line'><span class="nb">puts</span> <span class="n">data</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I hope this makes using SOAP with Ruby a lot less cryptic for other as it does me.</p>
 ]]></content>
   </entry>
   

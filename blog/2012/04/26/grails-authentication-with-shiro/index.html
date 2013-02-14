@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Grails Authentication with Shiro - Eric Berry</title>
+  <title>Grails Authentication with Shiro - coderberry</title>
   <meta name="author" content="Eric Berry">
 
   
@@ -18,14 +18,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://coderberry.me/blog/2012/04/26/grails-authentication-with-shiro">
-  <link href="/favicon.ico" rel="icon">
-  
+  <link rel="canonical" href="http://coderberry.me/blog/2012/04/26/grails-authentication-with-shiro/">
+  <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Eric Berry" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="coderberry" type="application/atom+xml">
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -46,14 +45,11 @@
 
 </head>
 
-<body   class="no-sidebar"  >
-  <header role="banner"><hgroup id="logo-container">
-  <h2><a href="/"><img src="/images/eric.jpg"></a></h2>
-  <h1 id="site-title">Eric Berry</h1>
-</hgroup>
-
-</header>
-  <nav role="navigation">
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
@@ -63,10 +59,15 @@
 </form>
   
 <ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            coderberry
+        </span>
+       
+    </a></li>
   <li><a href="/">Blog</a></li>
   <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="http://github.com/cavneb">Code</a></li>
-  <li><a href="http://www.linkedin.com/in/ericberry/" target="_blank">About</a></li>
+  <li><a href="/about">About me</a></li>
 </ul>
 
 </nav>
@@ -982,7 +983,7 @@ The <strong><em>in</em></strong> property is a <em>List<String></em> of roles, e
       
   
 
-<span class="byline author vcard">Posted by <span class="fn"><a href="/about" title="About the author (Eric Berry)" rel="author">Eric Berry</a></span></span>
+<span class="byline author vcard">Posted by <span class="fn">Eric Berry</span></span>
 
       
 
@@ -1024,7 +1025,7 @@ The <strong><em>in</em></strong> property is a <em>List<String></em> of roles, e
         <a class="basic-alignment left" href="/blog/2012/04/24/asset-pipeline-for-dummies/" title="Previous Post: Asset Pipeline for Dummies">&laquo; Asset Pipeline for Dummies</a>
       
       
-        <a class="basic-alignment right" href="/blog/2012/05/07/stupid-simple-post-slash-get-with-groovy-httpbuilder/" title="next Post: Stupid Simple POST/GET with Groovy HTTPBuilder">Stupid Simple POST/GET with Groovy HTTPBuilder &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/05/07/stupid-simple-post-slash-get-with-groovy-httpbuilder/" title="Next Post: Stupid Simple POST/GET with Groovy HTTPBuilder">Stupid Simple POST/GET with Groovy HTTPBuilder &raquo;</a>
       
     </p>
   </footer>
@@ -1038,11 +1039,84 @@ The <strong><em>in</em></strong> property is a <em>List<String></em> of roles, e
 
 </div>
 
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/bootstrapping-angularjs-with-yeoman/">Bootstrapping AngularJS with Yeoman</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/09/simple-fix-for-pagination-with-twitter-bootstrap/">Simple fix for pagination with Twitter Bootstrap</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/11/airbrake-exception-logging-in-your-grails-application/">Airbrake exception logging in your Grails application</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/cavneb">@cavneb</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'cavneb',
+            count: 3,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("cavneb", 5, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/cavneb" class="twitter-follow-button" data-show-count="true">Follow @cavneb</a>
+  
+</section>
+
+
+
+
+  
+</aside>
+
 
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Eric Berry -
+  Copyright &copy; 2013 - Eric Berry -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -3,8 +3,8 @@
 # ----------------------- #
 
 url: http://coderberry.me
-title: Eric Berry
-subtitle: EB
+title: coderberry
+subtitle: 
 author: Eric Berry
 simple_search: http://google.com/search
 description: 
@@ -66,7 +66,7 @@ github_skip_forks: true
 
 # Twitter
 twitter_user: cavneb
-twitter_tweet_count: 4
+twitter_tweet_count: 5
 twitter_show_replies: false
 twitter_follow_button: true
 twitter_show_follower_count: true

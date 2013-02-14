@@ -1,0 +1,124 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'yo' ]
+2 info using npm@1.1.59
+3 info using node@v0.8.8
+4 verbose read json /Users/eberry/package.json
+5 verbose read json /Users/eberry/node_modules/pg/package.json
+6 verbose read json /Users/eberry/node_modules/phantom/package.json
+7 verbose read json /Users/eberry/node_modules/socket.io/package.json
+8 verbose read json /Users/eberry/node_modules/yo/package.json
+9 verbose read json /Users/eberry/package.json
+10 verbose cache add [ 'yo', null ]
+11 silly cache add name=undefined spec="yo" args=["yo",null]
+12 verbose parsed url { pathname: 'yo', path: 'yo', href: 'yo' }
+13 silly lockFile c41975d1-yo yo
+14 verbose lock yo /Users/eberry/.npm/c41975d1-yo.lock
+15 silly lockFile c41975d1-yo yo
+16 verbose addNamed [ 'yo', '' ]
+17 verbose addNamed [ null, '' ]
+18 silly lockFile d937c28e-yo yo@
+19 verbose lock yo@ /Users/eberry/.npm/d937c28e-yo.lock
+20 silly addNameRange { name: 'yo', range: '', hasData: false }
+21 verbose url raw yo
+22 verbose url resolving [ 'https://registry.npmjs.org/', './yo' ]
+23 verbose url resolved https://registry.npmjs.org/yo
+24 info retry registry request attempt 1 at 20:29:22
+25 verbose etag "8JM6NDDKHADKUGFZLW2EGO4CF"
+26 http GET https://registry.npmjs.org/yo
+27 http 304 https://registry.npmjs.org/yo
+28 silly registry.get cb [ 304,
+28 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B)',
+28 silly registry.get     etag: '"8JM6NDDKHADKUGFZLW2EGO4CF"',
+28 silly registry.get     date: 'Thu, 14 Feb 2013 03:27:26 GMT',
+28 silly registry.get     'content-length': '0' } ]
+29 verbose etag yo from cache
+30 silly addNameRange number 2 { name: 'yo', range: '', hasData: true }
+31 silly addNameRange versions [ 'yo', [ '1.0.0-beta.1' ] ]
+32 verbose addNamed [ 'yo', '1.0.0-beta.1' ]
+33 verbose addNamed [ '1.0.0-beta.1', '1.0.0-beta.1' ]
+34 silly lockFile d99a0070-yo-1-0-0-beta-1 yo@1.0.0-beta.1
+35 verbose lock yo@1.0.0-beta.1 /Users/eberry/.npm/d99a0070-yo-1-0-0-beta-1.lock
+36 verbose read json /Users/eberry/.npm/yo/1.0.0-beta.1/package/package.json
+37 silly lockFile d99a0070-yo-1-0-0-beta-1 yo@1.0.0-beta.1
+38 silly lockFile d937c28e-yo yo@
+39 silly resolved [ { name: 'yo',
+39 silly resolved     version: '1.0.0-beta.1',
+39 silly resolved     description: 'Yo is a CLI tool for scaffolding out Yeoman projects',
+39 silly resolved     keywords:
+39 silly resolved      [ 'front-end',
+39 silly resolved        'development',
+39 silly resolved        'dev',
+39 silly resolved        'build',
+39 silly resolved        'web',
+39 silly resolved        'tool',
+39 silly resolved        'cli',
+39 silly resolved        'scaffold',
+39 silly resolved        'stack' ],
+39 silly resolved     homepage: 'http://yeoman.io',
+39 silly resolved     bugs: 'https://github.com/yeoman/yeoman/issues',
+39 silly resolved     author: { name: 'Chrome Developer Relations' },
+39 silly resolved     bin: { yo: 'bin/yo' },
+39 silly resolved     directories: { man: 'man' },
+39 silly resolved     repository: { type: 'git', url: 'git://github.com/yeoman/yeoman.git' },
+39 silly resolved     scripts:
+39 silly resolved      { test: 'mocha test/test-*.js',
+39 silly resolved        manpages: './scripts/docs-build' },
+39 silly resolved     dependencies:
+39 silly resolved      { 'yeoman-generator': 'https://github.com/yeoman/generator/archive/23db667fa0ce6ced8fa5825294273150832ba5f3.tar.gz',
+39 silly resolved        colors: '~0.6.0-1',
+39 silly resolved        nopt: '~2.1.1',
+39 silly resolved        lodash: '~1.0.0-rc.3',
+39 silly resolved        'update-notifier': '~0.1.1',
+39 silly resolved        insight: '~0.1.0',
+39 silly resolved        ronn: '~0.3.8',
+39 silly resolved        mocha: '~1.8.1' },
+39 silly resolved     devDependencies: { mocha: '~1.8.1', ronn: '~0.3.8', grunt: '~0.4.0rc7' },
+39 silly resolved     engines: { node: '>=0.8.0' },
+39 silly resolved     preferGlobal: true,
+39 silly resolved     licenses: [ [Object] ],
+39 silly resolved     man:
+39 silly resolved      [ '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/bower.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/build.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/faq.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/folders.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/gruntfile.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/init.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/insight.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/serve.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/server.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/test.1',
+39 silly resolved        '/Users/eberry/.npm/yo/1.0.0-beta.1/package/man/yeoman.1' ],
+39 silly resolved     readme: '# Welcome, Friend! [![Build Status](https://secure.travis-ci.org/yeoman/yeoman.png?branch=master)](http://travis-ci.org/yeoman/yeoman)\n\nYeoman is a robust and opinionated client-side stack, comprising tools and frameworks that can help developers quickly build beautiful web applications. We take care of providing everything needed to get started without any of the normal headaches associated with a manual setup. Builds upon great tools like [grunt](http://gruntjs.com) the task runner, [bower](http://twitter.github.com/bower/) the package manager for the web, and our own homebrewed [generator system](https://github.com/yeoman/generators).\n\n## [Website](http://yeoman.io)&nbsp;&nbsp;&nbsp;[Documentation](https://github.com/yeoman/yeoman/wiki)&nbsp;&nbsp;&nbsp;[Submit issue](https://github.com/yeoman/yeoman#issue-submission)\n\n![image](http://yeoman.io/media/yeoman-masthead.png)\n\n\n## Installation\n\n    npm install -g yeoman\n\n*Node.js 0.8.x required*\n\n\nTry the audit script to see what you need in place:\n\n    curl -L get.yeoman.io | bash\n\nYou can follow its guidance or simply walk through the [installation procedure](https://github.com/yeoman/yeoman/wiki/Manual-Install).\n\n\n## Issue submission\n\nMake sure you\'ve read the [issue submission guidelines](https://github.com/yeoman/yeoman/blob/master/contributing.md#issue-submission) before you open a [new issue](https://github.com/yeoman/yeoman/issues/new).\n\n\n## Overview\n\nYeoman supports a powerful set of high-level commands:\n\n```shell\n     init  # Initialize and scaffold a new project using generator templates\n    build  # Build an optimized version of your app, ready to deploy\n   server  # Launch a preview server which will begin watching for changes\n     test  # Run a Mocha test harness in a headless PhantomJS\n\n  install  # Install a package from the clientside package registry\nuninstall  # Uninstall the package\n   update  # Update a package to the latest version\n     list  # List the packages currently installed\n   search  # Query the registry for matching package names\n   lookup  # Look up info on a particular package\n```\n\n### Example usage\n\nA common initial workflow with Yeoman might be:\n\n```shell\nyeoman init         # Invoke the most basic application scaffold (Bootstrap, Boilerplate etc.)\nyeoman server       # Fire off a file watch/server process which also places an\n                    # intermediate build of your project in `temp`\nyeoman build        # Build your project, creating an optimized version in a new `dist` directory\nyeoman server:dist  # Serve up the production-ready version of your application\nyeoman test         # Test your app\n```\n\nSome more examples of how to use our commands:\n\n```shell\n# Generators\nyeoman init ember                           # Create a "Hello World" Yeoman project with the Ember Starter Kit\nyeoman init backbone                        # Backbone-Rails generator scaffold\nyeoman init angular                         # Invoke the AngularJS generator scaffold\nyeoman init angular:controller name         # Invoke the AngularJS Controller sub-generator\n\n# Package management\nyeoman search jquery                        # Lookup jQuery in the Bower registry\nyeoman install jquery underscore [depName]  # Install a dependency or dependencies\nyeoman update jquery                        # Update a specific dependency (e.g jquery)\n```\n\n#### Bower\n\nYeoman uses [Bower](http://twitter.github.com/bower) as its package manager. The Bower registry is currently being populated, you may find that certain packages work and others do not. We are actively working with the Bower team to resolve this issue.\n\n\n![image](http://yeoman.io/media/yeoman-packages.png)\n\n\n## Platform Support\n\nYeoman supports OS X, Linux, FreeBSD, with partial Windows support. We will be aiming to bring in full support for Windows in a [future](https://github.com/yeoman/yeoman/wiki/Manual-Install) version.\n\n\n## Contribute\n\nSee the [contributing docs](https://github.com/yeoman/yeoman/blob/master/contributing.md)\n\n\n## Links\n\n- [Website](http://yeoman.io)\n- [Documentation](https://github.com/yeoman/yeoman/wiki)\n- [Mailinglist](https://groups.google.com/forum/#!forum/yeoman-dev)\n- [StackOverflow](http://stackoverflow.com/questions/tagged/yeoman) \n- [\\#yeoman](http://webchat.freenode.net/?channels=yeoman) on Freenode\n- [Google+](https://plus.google.com/101063139999404044459/posts) *(follow for updates)*\n- [Twitter](https://twitter.com/yeoman)\n- [Media assets](https://github.com/yeoman/yeoman.io/tree/gh-pages/media)\n- [Available components](http://sindresorhus.com/bower-components/)\n\n\n## Team\n\nYeoman was beautifully crafted by these people and bunch of awesome [contributors](https://github.com/yeoman/yeoman/graphs/contributors)\n\n[![Paul Irish](http://www.gravatar.com/avatar/ffe68d6f71b225f7661d33f2a8908281.png?s=40)Paul Irish](http://paulirish.com)&nbsp;\n[![Addy Osmani](http://www.gravatar.com/avatar/96270e4c3e5e9806cf7245475c00b275.png?s=40)Addy Osmani](http://addyosmani.com)&nbsp;\n[![Mickael Daniel](http://www.gravatar.com/avatar/a23615915f0baf096b94cc9df93fc327.png?s=40)Mickael Daniel](http://blog.mklog.fr)&nbsp;\n[![Sindre Sorhus](http://www.gravatar.com/avatar/d36a92237c75c5337c17b60d90686bf9.png?s=40)Sindre Sorhus](http://sindresorhus.com)&nbsp;\n[![Eric Bidelman](http://www.gravatar.com/avatar/e7948aac7c52b26470be80311873a398.png?s=40)Eric Bidelman](http://ericbidelman.com)\n[![Frederick Ros](http://www.gravatar.com/avatar/4605de69c4c3af3f48b8e829206cd4c2.png?s=40)Frederick Ros](https://github.com/sleeper)\n\n\n## License\n\n[BSD license](http://opensource.org/licenses/bsd-license.php)  \nCopyright (c) Google\n',
+39 silly resolved     _id: 'yo@1.0.0-beta.1',
+39 silly resolved     _from: 'yo' } ]
+40 info install yo@1.0.0-beta.1 into /Users/eberry
+41 info installOne yo@1.0.0-beta.1
+42 verbose from cache /Users/eberry/.npm/yo/1.0.0-beta.1/package/package.json
+43 info /Users/eberry/node_modules/yo unbuild
+44 verbose from cache /Users/eberry/node_modules/yo/package.json
+45 info preuninstall yo@1.0.0-beta.1
+46 info uninstall yo@1.0.0-beta.1
+47 verbose true,/Users/eberry/node_modules,/Users/eberry/node_modules unbuild yo@1.0.0-beta.1
+48 verbose /Users/eberry/node_modules/.bin,[object Object] binRoot
+49 info postuninstall yo@1.0.0-beta.1
+50 info /Users/eberry/node_modules/yo unbuild
+51 verbose read json /Users/eberry/node_modules/yo/package.json
+52 error error rolling back Error: ENOTEMPTY, rmdir '/Users/eberry/node_modules/yo/node_modules/insight/node_modules/configstore/node_modules/.bin'
+52 error error rolling back  yo@1.0.0-beta.1 { [Error: ENOTEMPTY, rmdir '/Users/eberry/node_modules/yo/node_modules/insight/node_modules/configstore/node_modules/.bin']
+52 error error rolling back   errno: 53,
+52 error error rolling back   code: 'ENOTEMPTY',
+52 error error rolling back   path: '/Users/eberry/node_modules/yo/node_modules/insight/node_modules/configstore/node_modules/.bin' }
+53 error Error: ENOTEMPTY, rmdir '/Users/eberry/node_modules/yo/node_modules/insight/node_modules/configstore/node_modules/.bin'
+54 error If you need help, you may report this log at:
+54 error     <http://github.com/isaacs/npm/issues>
+54 error or email it to:
+54 error     <npm-@googlegroups.com>
+55 error System Darwin 12.2.1
+56 error command "node" "/usr/local/bin/npm" "install" "yo"
+57 error cwd /Users/eberry/Dropbox/Projects/personal/cavneb.github.com
+58 error node -v v0.8.8
+59 error npm -v 1.1.59
+60 error path /Users/eberry/node_modules/yo/node_modules/insight/node_modules/configstore/node_modules/.bin
+61 error code ENOTEMPTY
+62 error errno 53
+63 verbose exit [ 53, true ]

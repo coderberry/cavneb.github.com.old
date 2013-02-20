@@ -4,7 +4,7 @@
   <title><![CDATA[coderberry]]></title>
   <link href="http://coderberry.me/atom.xml" rel="self"/>
   <link href="http://coderberry.me/"/>
-  <updated>2013-02-13T21:56:24-07:00</updated>
+  <updated>2013-02-20T08:41:28-07:00</updated>
   <id>http://coderberry.me/</id>
   <author>
     <name><![CDATA[Eric Berry]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[What is the best memory config for RubyMine?]]></title>
+    <link href="http://coderberry.me/blog/2013/02/20/rubymine-memory-config-vmoptions/"/>
+    <updated>2013-02-20T08:30:00-07:00</updated>
+    <id>http://coderberry.me/blog/2013/02/20/rubymine-memory-config-vmoptions</id>
+    <content type="html"><![CDATA[<p>RubyMine has become <em>awesomer</em> and <em>awesomer</em> over the years and is now my primary development tool for Rails development. One thing I&#8217;ve found frustrating however is that there is very little documentation on the best memory settings for your computer.</p>
+
+<p>I&#8217;d like to get a thread going here with people identifying their computer, CPU, memory and config settings for RubyMine.</p>
+
+<p>The config file can be located in the <code>bin</code> folder of your application. On my mac, the file is <code>/Applications/RubyMine/bin/idea.vmoptions</code>. If it doesn&#8217;t exist you may need to create it.</p>
+
+<p>So here are my computer specs and vmoptions:</p>
+
+<p>MacBook Pro Retina 2.6 GHz Intel Core i7 with 16 GB memory</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-Xms128m
+</span><span class='line'>-Xmx2048m
+</span><span class='line'>-XX:MaxPermSize=500m
+</span><span class='line'>-XX:ReservedCodeCacheSize=128m
+</span><span class='line'>-XX:+UseCodeCacheFlushing
+</span><span class='line'>-XX:+UseCompressedOops</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Please feel free to post yours in the comments below. I believe this will help others optimize their RubyMine experience.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Bootstrapping AngularJS with Yeoman]]></title>
@@ -3424,189 +3457,6 @@ an issue. Here is the code:</p>
 </span><span class='line'><span class="s2">&quot;&quot;&quot;</span>
 </span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Using multiple SMTP accounts with Rails &amp; ActionMailer]]></title>
-    <link href="http://coderberry.me/blog/2009/03/30/using-multiple-smtp-accounts-with-rails-and-actionmailer/"/>
-    <updated>2009-03-30T00:00:00-06:00</updated>
-    <id>http://coderberry.me/blog/2009/03/30/using-multiple-smtp-accounts-with-rails-and-actionmailer</id>
-    <content type="html"><![CDATA[<p>Recently I ran into a problem where I needed to be able to send emails via two different SMTP accounts within the same Rails application. I scoured the net trying to find a method to do this, but I couldn&#8217;t find one. So I pulled out my hack-hat and got started.</p>
-
-<p>If there are any better ways to do this, I would love to hear about it.</p>
-
-<p>I first created a new YAML file in my config folder called <code>action_mailer.yml</code>. In this file, I specified three different nodes with the actionmailer settings.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">development</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">...</span>
-</span><span class='line'>
-</span><span class='line'><span class="l-Scalar-Plain">test</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">...</span>
-</span><span class='line'>
-</span><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
-</span><span class='line'>  <span class="l-Scalar-Plain">website1</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;gary@superfriends.com&quot;</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">user_name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">gary</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">superduper</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">address</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">smtp.gmail.com</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">587</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">authentication</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">:plain</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="l-Scalar-Plain">website2</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mysupercooldomain.com</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">user_name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ABCDEF</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">blahblah</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">address</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mail.authsmtp.com</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">25</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">authentication</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">:plain</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Afterwards, I created two mailer models that represent each of the different mailers I will use.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># app/models/mailer1.rb</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Website1</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">load_settings</span>
-</span><span class='line'>    <span class="n">options</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">RAILS_ROOT</span><span class="si">}</span><span class="s2">/config/action_mailer.yml&quot;</span><span class="p">)</span><span class="o">[</span><span class="no">RAILS_ENV</span><span class="o">][</span><span class="s2">&quot;website1&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="vc">@@smtp_settings</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="ss">:address</span>              <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;address&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:port</span>                 <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;port&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:domain</span>               <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;domain&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:authentication</span>       <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;authentication&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:user_name</span>            <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;user_name&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:password</span>             <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">welcome_email</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">sent_at</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">load_settings</span>
-</span><span class='line'>    <span class="vi">@subject</span> <span class="o">=</span> <span class="s1">&#39;Thank you for visiting website 1&#39;</span>
-</span><span class='line'>    <span class="vi">@recipients</span> <span class="o">=</span> <span class="no">RAILS_ENV</span> <span class="o">==</span> <span class="s2">&quot;production&quot;</span> <span class="p">?</span> <span class="n">recipient</span> <span class="p">:</span> <span class="s2">&quot;cavneb@gmail.com&quot;</span>
-</span><span class='line'>    <span class="vi">@from</span> <span class="o">=</span> <span class="s1">&#39;gary@superfriends.com&#39;</span>
-</span><span class='line'>    <span class="vi">@sent_on</span> <span class="o">=</span> <span class="n">sent_at</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># app/models/mailer2.rb</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Website2</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">load_settings</span>
-</span><span class='line'>    <span class="n">options</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">RAILS_ROOT</span><span class="si">}</span><span class="s2">/config/action_mailer.yml&quot;</span><span class="p">)</span><span class="o">[</span><span class="no">RAILS_ENV</span><span class="o">][</span><span class="s2">&quot;website2&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="vc">@@smtp_settings</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="ss">:address</span>              <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;address&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:port</span>                 <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;port&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:domain</span>               <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;domain&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:authentication</span>       <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;authentication&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:user_name</span>            <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;user_name&quot;</span><span class="o">]</span><span class="p">,</span>
-</span><span class='line'>      <span class="ss">:password</span>             <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="o">]</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">welcome_email</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">sent_at</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
-</span><span class='line'>    <span class="n">load_settings</span>
-</span><span class='line'>    <span class="vi">@subject</span> <span class="o">=</span> <span class="s1">&#39;Thank you for visiting website 2&#39;</span>
-</span><span class='line'>    <span class="vi">@recipients</span> <span class="o">=</span> <span class="no">RAILS_ENV</span> <span class="o">==</span> <span class="s2">&quot;production&quot;</span> <span class="p">?</span> <span class="n">recipient</span> <span class="p">:</span> <span class="s2">&quot;cavneb@gmail.com&quot;</span>
-</span><span class='line'>    <span class="vi">@from</span> <span class="o">=</span> <span class="s1">&#39;info@mysupercooldomain.com&#39;</span>
-</span><span class='line'>    <span class="vi">@sent_on</span> <span class="o">=</span> <span class="n">sent_at</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So now when I send an email, I can first determine which mailer to use and then send the email.</p>
-
-<p>For example, your controller might have code that looks like this:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Found in code of controller</span>
-</span><span class='line'><span class="k">if</span> <span class="n">session</span><span class="o">[</span><span class="ss">:template_name</span><span class="o">]</span> <span class="o">==</span> <span class="s2">&quot;website1&quot;</span>
-</span><span class='line'>  <span class="no">Website1</span><span class="o">.</span><span class="n">deliver_welcome_email</span><span class="p">(</span><span class="s2">&quot;cavneb@gmail.com&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'>  <span class="no">Website2</span><span class="o">.</span><span class="n">deliver_welcome_email</span><span class="p">(</span><span class="s2">&quot;cavneb@gmail.com&quot;</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I realize this is probably the hard way, but hey, it&#8217;s a start. Please post any plugins or alternatives to doing this if you know of any.</p>
 ]]></content>
   </entry>
   

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Ajax - coderberry</title>
+  <title>What is the best memory config for RubyMine? - coderberry</title>
   <meta name="author" content="Eric Berry">
 
   
-  <meta name="description" content="Category: Ajax">
+  <meta name="description" content="RubyMine has become awesomer and awesomer over the years and is now my primary development tool for Rails development. One thing I&#8217;ve found &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://coderberry.meblog/categories/ajax/">
+  <link rel="canonical" href="http://coderberry.me/blog/2013/02/20/rubymine-memory-config-vmoptions/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,36 +74,119 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Ajax</h1>
+    
+      <h1 class="entry-title">What Is the Best Memory Config for RubyMine?</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T08:30:00-07:00" pubdate data-updated="true">Feb 20<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>RubyMine has become <em>awesomer</em> and <em>awesomer</em> over the years and is now my primary development tool for Rails development. One thing I&#8217;ve found frustrating however is that there is very little documentation on the best memory settings for your computer.</p>
 
-  
-  <h2>2010</h2>
+<p>I&#8217;d like to get a thread going here with people identifying their computer, CPU, memory and config settings for RubyMine.</p>
 
-<article>
-  
-<h1><a href="/blog/2010/10/28/roll-your-own-ajax-based-captcha-in-grails/">Roll your own Ajax-Based Captcha in Grails</a></h1>
-<time datetime="2010-10-28T00:00:00-06:00" pubdate><span class='month'>Oct</span> <span class='day'>28</span> <span class='year'>2010</span></time>
+<p>The config file can be located in the <code>bin</code> folder of your application. On my mac, the file is <code>/Applications/RubyMine/bin/idea.vmoptions</code>. If it doesn&#8217;t exist you may need to create it.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ajax/'>Ajax</a>, <a class='category' href='/blog/categories/grails/'>Grails</a>, <a class='category' href='/blog/categories/security/'>Security</a></span>
-</footer>
+<p>So here are my computer specs and vmoptions:</p>
+
+<p>MacBook Pro Retina 2.6 GHz Intel Core i7 with 16 GB memory</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-Xms128m
+</span><span class='line'>-Xmx2048m
+</span><span class='line'>-XX:MaxPermSize=500m
+</span><span class='line'>-XX:ReservedCodeCacheSize=128m
+</span><span class='line'>-XX:+UseCodeCacheFlushing
+</span><span class='line'>-XX:+UseCompressedOops</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
-
+<p>Please feel free to post yours in the comments below. I believe this will help others optimize their RubyMine experience.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Eric Berry</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-20T08:30:00-07:00" pubdate data-updated="true">Feb 20<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ide/'>IDE</a>, <a class='category' href='/blog/categories/rubymine/'>RubyMine</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://coderberry.me/blog/2013/02/20/rubymine-memory-config-vmoptions/" data-via="cavneb" data-counturl="http://coderberry.me/blog/2013/02/20/rubymine-memory-config-vmoptions/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/02/13/bootstrapping-angularjs-with-yeoman/" title="Previous Post: Bootstrapping AngularJS with Yeoman">&laquo; Bootstrapping AngularJS with Yeoman</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -195,7 +278,10 @@
       var disqus_shortname = 'coderberry';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://coderberry.me/blog/2013/02/20/rubymine-memory-config-vmoptions/';
+        var disqus_url = 'http://coderberry.me/blog/2013/02/20/rubymine-memory-config-vmoptions/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

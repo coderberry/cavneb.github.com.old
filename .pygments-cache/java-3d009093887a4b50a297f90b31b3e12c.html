@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="n">def</span> <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;http://myexample.com&quot;</span>
+<span class="n">def</span> <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/path/to/api&quot;</span>
+<span class="n">def</span> <span class="n">query</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">firstName:</span> <span class="s">&quot;Eric&quot;</span><span class="o">,</span> <span class="nl">lastName:</span> <span class="s">&quot;Berry&quot;</span><span class="o">,</span> <span class="nl">email:</span> <span class="s">&quot;cavneb@gmail.com&quot;</span> <span class="o">]</span>
+
+<span class="c1">// Submit a request via GET</span>
+<span class="n">def</span> <span class="n">response</span> <span class="o">=</span> <span class="n">ApiConsumer</span><span class="o">.</span><span class="na">getText</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">path</span><span class="o">,</span> <span class="n">query</span><span class="o">)</span>
+
+<span class="c1">// Submit a request via POST</span>
+<span class="n">def</span> <span class="n">response</span> <span class="o">=</span> <span class="n">ApiConsumer</span><span class="o">.</span><span class="na">postText</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">path</span><span class="o">,</span> <span class="n">query</span><span class="o">)</span>
+</pre>
+</div>

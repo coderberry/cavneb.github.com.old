@@ -1,0 +1,25 @@
+<div class="highlight"><pre><span class="c1">// Load this script when page loads</span>
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+  
+ <span class="c1">// Set up a listener so that when anything with a class of &#39;tab&#39; </span>
+ <span class="c1">// is clicked, this function is run.</span>
+ <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.tab&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+  <span class="c1">// Remove the &#39;active&#39; class from the active tab.</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tabs_container &gt; .tabs &gt; li.active&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">);</span>
+    
+  <span class="c1">// Add the &#39;active&#39; class to the clicked tab.</span>
+  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">);</span>
+    
+  <span class="c1">// Remove the &#39;tab_contents_active&#39; class from the visible tab contents.</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tabs_container &gt; .tab_contents_container &gt; div.tab_contents_active&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;tab_contents_active&#39;</span><span class="p">);</span>
+    
+  <span class="c1">// Add the &#39;tab_contents_active&#39; class to the associated tab contents.</span>
+  <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rel</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;tab_contents_active&#39;</span><span class="p">);</span>
+    
+ <span class="p">});</span>
+<span class="p">});</span>
+</pre>
+</div>

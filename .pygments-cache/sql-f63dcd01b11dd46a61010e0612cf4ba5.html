@@ -1,0 +1,9 @@
+<div class="highlight"><pre><span class="k">SELECT</span> <span class="k">count</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+  <span class="k">FROM</span> <span class="n">lead</span> <span class="k">AS</span> <span class="n">l</span><span class="p">,</span> <span class="n">submission</span> <span class="k">AS</span> <span class="n">s</span><span class="p">,</span> <span class="n">buyerLog</span> <span class="k">as</span> <span class="n">bl</span>
+    <span class="k">WHERE</span> <span class="n">l</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">leadId</span>
+      <span class="k">AND</span> <span class="n">s</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">bl</span><span class="p">.</span><span class="n">submissionId</span>
+      <span class="k">AND</span> <span class="n">bl</span><span class="p">.</span><span class="n">leadBuyer</span> <span class="o">=</span> <span class="err">$</span><span class="n">buyerName</span>
+      <span class="k">AND</span> <span class="n">l</span><span class="p">.</span><span class="n">id</span> <span class="o">!=</span> <span class="err">$</span><span class="n">lead</span><span class="p">.</span><span class="n">id</span>
+      <span class="k">AND</span> <span class="n">l</span><span class="p">.</span><span class="n">dateCreated</span><span class="p">::</span><span class="nb">date</span> <span class="o">&gt;</span> <span class="err">$</span><span class="n">daysAgo</span>
+</pre>
+</div>

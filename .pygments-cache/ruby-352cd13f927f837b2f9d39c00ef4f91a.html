@@ -1,0 +1,35 @@
+<div class="highlight"><pre><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">WillPaginate</span><span class="p">)</span>
+  <span class="k">module</span> <span class="nn">WillPaginate</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+
+<span class="sr">&lt;pre&gt;&lt;code&gt;module ActionView</span>
+<span class="sr">  def will_paginate(collection = nil, options = {})</span>
+<span class="sr">    options[:renderer] ||= BootstrapLinkRenderer</span>
+<span class="sr">    super.try :html_safe</span>
+<span class="sr">  end</span>
+
+<span class="sr">  class BootstrapLinkRenderer &amp;lt; LinkRenderer</span>
+<span class="sr">    protected</span>
+
+<span class="sr">    def html_container(html)</span>
+<span class="sr">      tag :div, tag(:ul, html), container_attributes</span>
+<span class="sr">    end</span>
+
+<span class="sr">    def page_number(page)</span>
+<span class="sr">      tag :li, link(page, page, :rel =&amp;gt; rel_value(page)), :class =&amp;gt; (&#39;active&#39; if page == current_page)</span>
+<span class="sr">    end</span>
+
+<span class="sr">    def previous_or_next_page(page, text, classname)</span>
+<span class="sr">      tag :li, link(text, page || &#39;#&#39;), :class =&amp;gt; [classname[0..3], classname, (&#39;disabled&#39; unless page)].join(&#39; &#39;)</span>
+<span class="sr">    end</span>
+
+<span class="sr">    def gap</span>
+<span class="sr">      tag :li, link(super, &#39;#&#39;), :class =&amp;gt; &#39;disabled&#39;</span>
+<span class="sr">    end</span>
+<span class="sr">  end</span>
+<span class="sr">end</span>
+<span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+
+<span class="sr">&lt;p&gt;  end</span>
+<span class="sr">end</span>
+</pre>
+</div>

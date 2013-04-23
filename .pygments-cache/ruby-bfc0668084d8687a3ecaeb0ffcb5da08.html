@@ -1,0 +1,32 @@
+<div class="highlight"><pre><span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">WillPaginate</span><span class="p">)</span>
+  <span class="k">module</span> <span class="nn">WillPaginate</span>
+    <span class="k">module</span> <span class="nn">ActionView</span>
+      <span class="k">def</span> <span class="nf">will_paginate</span><span class="p">(</span><span class="n">collection</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+        <span class="n">options</span><span class="o">[</span><span class="ss">:renderer</span><span class="o">]</span> <span class="o">||=</span> <span class="no">BootstrapLinkRenderer</span>
+        <span class="k">super</span><span class="o">.</span><span class="n">try</span> <span class="ss">:html_safe</span>
+      <span class="k">end</span>
+
+      <span class="k">class</span> <span class="nc">BootstrapLinkRenderer</span> <span class="o">&lt;</span> <span class="no">LinkRenderer</span>
+        <span class="kp">protected</span>
+
+        <span class="k">def</span> <span class="nf">html_container</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+          <span class="n">tag</span> <span class="ss">:div</span><span class="p">,</span> <span class="n">tag</span><span class="p">(</span><span class="ss">:ul</span><span class="p">,</span> <span class="n">html</span><span class="p">),</span> <span class="n">container_attributes</span>
+        <span class="k">end</span>
+
+        <span class="k">def</span> <span class="nf">page_number</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+          <span class="n">tag</span> <span class="ss">:li</span><span class="p">,</span> <span class="n">link</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="ss">:rel</span> <span class="o">=&gt;</span> <span class="n">rel_value</span><span class="p">(</span><span class="n">page</span><span class="p">)),</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;active&#39;</span> <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="n">current_page</span><span class="p">)</span>
+        <span class="k">end</span>
+
+        <span class="k">def</span> <span class="nf">previous_or_next_page</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">classname</span><span class="p">)</span>
+          <span class="n">tag</span> <span class="ss">:li</span><span class="p">,</span> <span class="n">link</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">page</span> <span class="o">||</span> <span class="s1">&#39;#&#39;</span><span class="p">),</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="n">classname</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="o">]</span><span class="p">,</span> <span class="n">classname</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;disabled&#39;</span> <span class="k">unless</span> <span class="n">page</span><span class="p">)</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="k">end</span>
+
+        <span class="k">def</span> <span class="nf">gap</span>
+          <span class="n">tag</span> <span class="ss">:li</span><span class="p">,</span> <span class="n">link</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">),</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s1">&#39;disabled&#39;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>

@@ -1,0 +1,42 @@
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;net/http&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;net/https&#39;</span>
+
+<span class="c1"># Create te http object</span>
+<span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;rpc.geocoder.us&#39;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">http</span><span class="o">.</span><span class="n">use_ssl</span> <span class="o">=</span> <span class="kp">false</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/service/soap/&#39;</span>
+
+<span class="c1"># Create the SOAP Envelope</span>
+<span class="n">data</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">EOF</span>
+<span class="sh">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="sh">&lt;SOAP-ENV:Envelope</span>
+<span class="sh">  xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;</span>
+<span class="sh">  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+<span class="sh">  xmlns:SOAP-ENC=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot;</span>
+<span class="sh">  SOAP-ENV:encodingStyle=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot;</span>
+<span class="sh">  xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;</span>
+<span class="sh">  &lt;SOAP-ENV:Body&gt;</span>
+<span class="sh">    &lt;m:geocode xmlns:m=&quot;http://rpc.geocoder.us/Geo/Coder/US/&quot;&gt;</span>
+<span class="sh">      &lt;location xsi:type=&quot;xsd:string&quot;&gt;1005 Gravenstein Highway North Sebastopol, CA 95472&lt;/location&gt;</span>
+<span class="sh">    &lt;/m:geocode&gt;</span>
+<span class="sh">  &lt;/SOAP-ENV:Body&gt;</span>
+<span class="sh">&lt;/SOAP-ENV:Envelope&gt;</span>
+<span class="no">EOF</span>
+
+<span class="c1"># Set Headers</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;Referer&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;http://www.appfusion.net&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/xml&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;Host&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;rpc.geocoder.us&#39;</span>
+<span class="p">}</span>
+
+<span class="c1"># Post the request</span>
+<span class="n">resp</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+
+<span class="c1"># Output the results</span>
+<span class="nb">puts</span> <span class="s1">&#39;Code = &#39;</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">code</span>
+<span class="nb">puts</span> <span class="s1">&#39;Message = &#39;</span> <span class="o">+</span> <span class="n">resp</span><span class="o">.</span><span class="n">message</span>
+<span class="n">resp</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39; = &#39;</span> <span class="o">+</span> <span class="n">val</span> <span class="p">}</span>
+<span class="nb">puts</span> <span class="n">data</span>
+</pre>
+</div>

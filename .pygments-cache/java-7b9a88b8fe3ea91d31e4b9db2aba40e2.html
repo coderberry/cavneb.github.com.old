@@ -1,0 +1,43 @@
+<div class="highlight"><pre><span class="kn">package</span> <span class="n">berry</span>
+
+<span class="kn">import</span> <span class="nn">org.springframework.web.multipart.MultipartFile</span>
+<span class="kn">import</span> <span class="nn">org.codehaus.groovy.grails.web.context.ServletContextHolder</span>
+<span class="kn">import</span> <span class="nn">grails.util.GrailsUtil</span>
+
+<span class="kd">class</span> <span class="nc">FileUploadService</span> <span class="o">{</span>
+
+  <span class="kt">boolean</span> <span class="n">transactional</span> <span class="o">=</span> <span class="kc">true</span>
+
+  <span class="n">def</span> <span class="n">String</span> <span class="nf">uploadFile</span><span class="o">(</span><span class="n">MultipartFile</span> <span class="n">file</span><span class="o">,</span> <span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">storagePath</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">GrailsUtil</span><span class="o">.</span><span class="na">environment</span> <span class="o">==</span> <span class="s">&quot;production&quot;</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">storagePath</span> <span class="o">=</span> <span class="s">&quot;/opt/assets&quot;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">def</span> <span class="n">servletContext</span> <span class="o">=</span> <span class="n">ServletContextHolder</span><span class="o">.</span><span class="na">servletContext</span>
+      <span class="n">storagePath</span> <span class="o">=</span> <span class="n">servletContext</span><span class="o">.</span><span class="na">getRealPath</span><span class="o">(</span><span class="err">&#39;</span><span class="n">assets</span><span class="err">&#39;</span><span class="o">)</span>
+    <span class="o">}</span>
+
+    <span class="c1">// Create storage path directory if it does not exist</span>
+    <span class="n">def</span> <span class="n">storagePathDirectory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">storagePath</span><span class="o">)</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">storagePathDirectory</span><span class="o">.</span><span class="na">exists</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">print</span> <span class="s">&quot;CREATING DIRECTORY ${storagePath}: &quot;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">storagePathDirectory</span><span class="o">.</span><span class="na">mkdirs</span><span class="o">())</span> <span class="o">{</span>
+        <span class="n">println</span> <span class="s">&quot;SUCCESS&quot;</span>
+      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">println</span> <span class="s">&quot;FAILED&quot;</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// Store file</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">file</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">file</span><span class="o">.</span><span class="na">transferTo</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;${storagePath}/${name}&quot;</span><span class="o">))</span>
+      <span class="n">println</span> <span class="s">&quot;Saved file: ${storagePath}/${name}&quot;</span>
+      <span class="k">return</span> <span class="s">&quot;${storagePath}/${name}&quot;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">println</span> <span class="s">&quot;File ${file.inspect()} was empty!&quot;</span>
+      <span class="k">return</span> <span class="kc">null</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+</div>

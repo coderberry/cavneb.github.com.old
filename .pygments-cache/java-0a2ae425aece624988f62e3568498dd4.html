@@ -1,0 +1,12 @@
+<div class="highlight"><pre><span class="n">def</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Transaction</span><span class="o">.</span><span class="na">createCriteria</span><span class="o">()</span>
+<span class="n">def</span> <span class="n">cnt</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="na">get</span> <span class="o">{</span>
+  <span class="n">projections</span> <span class="o">{</span>
+    <span class="n">sum</span><span class="o">(</span><span class="s">&quot;amount&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="n">eq</span><span class="o">(</span><span class="s">&quot;status&quot;</span><span class="o">,</span> <span class="n">k</span><span class="o">)</span>
+  <span class="n">eq</span><span class="o">(</span><span class="s">&quot;transactionType&quot;</span><span class="o">,</span> <span class="n">transactionType</span><span class="o">)</span>
+  <span class="n">ge</span><span class="o">(</span><span class="s">&quot;dateTimeProcessed&quot;</span><span class="o">,</span> <span class="n">cal1</span><span class="o">.</span><span class="na">getTime</span><span class="o">())</span>
+  <span class="n">le</span><span class="o">(</span><span class="s">&quot;dateTimeProcessed&quot;</span><span class="o">,</span> <span class="n">cal2</span><span class="o">.</span><span class="na">getTime</span><span class="o">())</span>
+<span class="o">}</span>
+</pre>
+</div>

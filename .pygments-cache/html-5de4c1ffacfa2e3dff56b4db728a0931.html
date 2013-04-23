@@ -1,0 +1,52 @@
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Tabbed Content with CSS and jQuery<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;myapp.css&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;jquery-1.2.6.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;myapp.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  
+  <span class="nt">&lt;body&gt;</span>
+    
+    <span class="c">&lt;!-- This is the box that all of the tabs and contents of </span>
+<span class="c">         the tabs will reside --&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;tabs_container&quot;</span><span class="nt">&gt;</span>
+      
+      <span class="c">&lt;!-- These are the tabs --&gt;</span>
+      <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;tabs&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">rel=</span><span class="s">&quot;#tab_1_contents&quot;</span> <span class="na">class=</span><span class="s">&quot;tab&quot;</span><span class="nt">&gt;</span>Tab 1<span class="nt">&lt;/a&gt;</span>
+        <span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">rel=</span><span class="s">&quot;#tab_2_contents&quot;</span> <span class="na">class=</span><span class="s">&quot;tab&quot;</span><span class="nt">&gt;</span>Tab 2<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">rel=</span><span class="s">&quot;#tab_3_contents&quot;</span> <span class="na">class=</span><span class="s">&quot;tab&quot;</span><span class="nt">&gt;</span>Tab 3<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="nt">&lt;/ul&gt;</span>
+      
+      <span class="c">&lt;!-- This is used so the contents don&#39;t appear to the </span>
+<span class="c">           right of the tabs --&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;clear&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+      
+      <span class="c">&lt;!-- This is a div that hold all the tabbed contents --&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;tab_contents_container&quot;</span><span class="nt">&gt;</span>
+    
+        <span class="c">&lt;!-- Tab 1 Contents --&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;tab_1_contents&quot;</span> <span class="na">class=</span><span class="s">&quot;tab_contents tab_contents_active&quot;</span><span class="nt">&gt;</span>
+          I&#39;m Good Enough!
+        <span class="nt">&lt;/div&gt;</span>
+    
+        <span class="c">&lt;!-- Tab 2 Contents --&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;tab_2_contents&quot;</span> <span class="na">class=</span><span class="s">&quot;tab_contents&quot;</span><span class="nt">&gt;</span>
+          I&#39;m Smart Enough!
+        <span class="nt">&lt;/div&gt;</span>
+    
+        <span class="c">&lt;!-- Tab 3 Contents --&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;tab_3_contents&quot;</span> <span class="na">class=</span><span class="s">&quot;tab_contents&quot;</span><span class="nt">&gt;</span>
+          And Doggone It, People Like Me!
+        <span class="nt">&lt;/div&gt;</span>
+    
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+</div>

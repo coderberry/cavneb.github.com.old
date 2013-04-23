@@ -1,0 +1,43 @@
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.example.Role</span>
+<span class="kn">import</span> <span class="nn">com.example.User</span>
+
+<span class="kd">class</span> <span class="nc">BootStrap</span> <span class="o">{</span>
+    <span class="n">def</span> <span class="n">shiroSecurityService</span>
+
+    <span class="n">def</span> <span class="n">init</span> <span class="o">=</span> <span class="o">{</span> <span class="n">servletContext</span> <span class="o">-&gt;</span>
+
+        <span class="c1">// Create the admin role</span>
+        <span class="n">def</span> <span class="n">adminRole</span> <span class="o">=</span> <span class="n">Role</span><span class="o">.</span><span class="na">findByName</span><span class="o">(</span><span class="err">&#39;</span><span class="n">ROLE_ADMIN</span><span class="err">&#39;</span><span class="o">)</span> <span class="o">?:</span>
+            <span class="k">new</span> <span class="nf">Role</span><span class="o">(</span><span class="nl">name:</span> <span class="err">&#39;</span><span class="n">ROLE_ADMIN</span><span class="err">&#39;</span><span class="o">).</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">failOnError:</span> <span class="kc">true</span><span class="o">)</span>
+
+        <span class="c1">// Create the user role</span>
+        <span class="n">def</span> <span class="n">userRole</span> <span class="o">=</span> <span class="n">Role</span><span class="o">.</span><span class="na">findByName</span><span class="o">(</span><span class="err">&#39;</span><span class="n">ROLE_USER</span><span class="err">&#39;</span><span class="o">)</span> <span class="o">?:</span>
+            <span class="k">new</span> <span class="nf">Role</span><span class="o">(</span><span class="nl">name:</span> <span class="err">&#39;</span><span class="n">ROLE_USER</span><span class="err">&#39;</span><span class="o">).</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">failOnError:</span> <span class="kc">true</span><span class="o">)</span>
+
+        <span class="c1">// Create an admin user</span>
+        <span class="n">def</span> <span class="n">adminUser</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="na">findByUsername</span><span class="o">(</span><span class="err">&#39;</span><span class="n">admin</span><span class="err">&#39;</span><span class="o">)</span> <span class="o">?:</span>
+            <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="nl">username:</span> <span class="s">&quot;admin&quot;</span><span class="o">,</span>
+                    <span class="nl">passwordHash:</span> <span class="n">shiroSecurityService</span><span class="o">.</span><span class="na">encodePassword</span><span class="o">(</span><span class="err">&#39;</span><span class="n">password</span><span class="err">&#39;</span><span class="o">))</span>
+                    <span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">failOnError:</span> <span class="kc">true</span><span class="o">)</span>
+
+        <span class="c1">// Add roles to the admin user</span>
+        <span class="k">assert</span> <span class="n">adminUser</span><span class="o">.</span><span class="na">addToRoles</span><span class="o">(</span><span class="n">adminRole</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">addToRoles</span><span class="o">(</span><span class="n">userRole</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">failOnError:</span> <span class="kc">true</span><span class="o">)</span>
+
+        <span class="c1">// Create an standard user</span>
+        <span class="n">def</span> <span class="n">standardUser</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="na">findByUsername</span><span class="o">(</span><span class="err">&#39;</span><span class="n">joe</span><span class="err">&#39;</span><span class="o">)</span> <span class="o">?:</span>
+            <span class="k">new</span> <span class="nf">User</span><span class="o">(</span><span class="nl">username:</span> <span class="s">&quot;joe&quot;</span><span class="o">,</span>
+                    <span class="nl">passwordHash:</span> <span class="n">shiroSecurityService</span><span class="o">.</span><span class="na">encodePassword</span><span class="o">(</span><span class="err">&#39;</span><span class="n">password</span><span class="err">&#39;</span><span class="o">))</span>
+                    <span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">failOnError:</span> <span class="kc">true</span><span class="o">)</span>
+
+        <span class="c1">// Add role to the standard user</span>
+        <span class="k">assert</span> <span class="n">standardUser</span><span class="o">.</span><span class="na">addToRoles</span><span class="o">(</span><span class="n">userRole</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">,</span> <span class="nl">failOnError:</span> <span class="kc">true</span><span class="o">)</span>
+
+    <span class="o">}</span>
+    <span class="n">def</span> <span class="n">destroy</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+</div>

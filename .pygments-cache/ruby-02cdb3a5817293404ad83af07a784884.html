@@ -1,0 +1,25 @@
+<div class="highlight"><pre><span class="c1"># app/models/mailer2.rb</span>
+
+<span class="k">class</span> <span class="nc">Website2</span> <span class="o">&lt;</span> <span class="no">ActionMailer</span><span class="o">::</span><span class="no">Base</span>
+  <span class="k">def</span> <span class="nf">load_settings</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="no">YAML</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">#{</span><span class="no">RAILS_ROOT</span><span class="si">}</span><span class="s2">/config/action_mailer.yml&quot;</span><span class="p">)</span><span class="o">[</span><span class="no">RAILS_ENV</span><span class="o">][</span><span class="s2">&quot;website2&quot;</span><span class="o">]</span>
+    <span class="vc">@@smtp_settings</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="ss">:address</span>              <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;address&quot;</span><span class="o">]</span><span class="p">,</span>
+      <span class="ss">:port</span>                 <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;port&quot;</span><span class="o">]</span><span class="p">,</span>
+      <span class="ss">:domain</span>               <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;domain&quot;</span><span class="o">]</span><span class="p">,</span>
+      <span class="ss">:authentication</span>       <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;authentication&quot;</span><span class="o">]</span><span class="p">,</span>
+      <span class="ss">:user_name</span>            <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;user_name&quot;</span><span class="o">]</span><span class="p">,</span>
+      <span class="ss">:password</span>             <span class="o">=&gt;</span> <span class="n">options</span><span class="o">[</span><span class="s2">&quot;password&quot;</span><span class="o">]</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">welcome_email</span><span class="p">(</span><span class="n">recipient</span><span class="p">,</span> <span class="n">sent_at</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
+    <span class="n">load_settings</span>
+    <span class="vi">@subject</span> <span class="o">=</span> <span class="s1">&#39;Thank you for visiting website 2&#39;</span>
+    <span class="vi">@recipients</span> <span class="o">=</span> <span class="no">RAILS_ENV</span> <span class="o">==</span> <span class="s2">&quot;production&quot;</span> <span class="p">?</span> <span class="n">recipient</span> <span class="p">:</span> <span class="s2">&quot;cavneb@gmail.com&quot;</span>
+    <span class="vi">@from</span> <span class="o">=</span> <span class="s1">&#39;info@mysupercooldomain.com&#39;</span>
+    <span class="vi">@sent_on</span> <span class="o">=</span> <span class="n">sent_at</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>

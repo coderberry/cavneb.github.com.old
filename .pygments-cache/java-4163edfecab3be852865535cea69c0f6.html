@@ -1,0 +1,21 @@
+<div class="highlight"><pre><span class="kd">class</span> <span class="nc">CommonTagLib</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="n">namespace</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">berry</span><span class="err">&#39;</span>
+
+    <span class="n">def</span> <span class="n">formatXML</span> <span class="o">=</span> <span class="o">{</span> <span class="n">attrs</span><span class="o">,</span> <span class="n">body</span> <span class="o">-&gt;</span>
+        <span class="n">String</span> <span class="n">rawXML</span> <span class="o">=</span> <span class="n">body</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">def</span> <span class="n">slurpedXML</span> <span class="o">=</span> <span class="k">new</span> <span class="n">XmlSlurper</span><span class="o">().</span><span class="na">parseText</span><span class="o">(</span><span class="n">rawXML</span><span class="o">)</span>
+            <span class="n">def</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringWriter</span><span class="o">()</span>
+            <span class="k">new</span> <span class="nf">XmlNodePrinter</span><span class="o">(</span><span class="k">new</span> <span class="n">PrintWriter</span><span class="o">(</span><span class="n">writer</span><span class="o">)).</span><span class="na">print</span><span class="o">(</span><span class="n">slurpedXML</span><span class="o">)</span>
+            <span class="n">def</span> <span class="n">formattedResponse</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+            <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="n">formattedResponse</span>
+        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">log</span><span class="o">.</span><span class="na">info</span> <span class="s">&quot;Unable to parse XML: ${e.message}&quot;</span>
+            <span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="n">rawXML</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+</div>

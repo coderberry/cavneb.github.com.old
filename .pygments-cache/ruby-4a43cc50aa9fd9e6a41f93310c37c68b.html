@@ -1,0 +1,16 @@
+<div class="highlight"><pre><span class="err">$</span> <span class="n">irb</span>
+<span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;rubygems&#39;</span>
+ <span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;bunny&#39;</span>
+ <span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="o">&gt;</span> <span class="n">my_client</span> <span class="o">=</span> <span class="no">Bunny</span><span class="o">.</span><span class="n">new</span>
+ <span class="o">=&gt;</span> <span class="c1">#&lt;Bunny::Client:0x1095a..., @port=5672&gt;</span>
+<span class="o">&gt;</span> <span class="n">my_client</span><span class="o">.</span><span class="n">start</span>
+ <span class="o">=&gt;</span> <span class="ss">:connected</span> 
+<span class="o">&gt;</span> <span class="n">my_queue</span> <span class="o">=</span> <span class="n">my_client</span><span class="o">.</span><span class="n">queue</span><span class="p">(</span><span class="s1">&#39;my_first_queue&#39;</span><span class="p">)</span>
+ <span class="o">=&gt;</span> <span class="c1">#&lt;Bunny::Queue:0x1063v..., @port=5672&gt;&gt;</span>
+ <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="o">&gt;</span> <span class="n">my_queue</span><span class="o">.</span><span class="n">message_count</span>
+ <span class="o">=&gt;</span> <span class="mi">1</span>
+</pre>
+</div>

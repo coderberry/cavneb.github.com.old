@@ -1,0 +1,14 @@
+<div class="highlight"><pre><span class="n">def</span> <span class="n">pickup</span> <span class="o">=</span> <span class="o">{</span>
+
+    <span class="c1">// Determine if the captcha is picked correctly</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">captchaSelection</span> <span class="o">!=</span> <span class="n">session</span><span class="o">.</span><span class="na">selectedCaptchaText</span><span class="o">)</span> <span class="o">{</span>
+
+      <span class="c1">// They selected the correct Captcha image. Continue with Authentication</span>
+
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">flash</span><span class="o">.</span><span class="na">message</span> <span class="o">=</span> <span class="s">&quot;You did not click the correct image below. Please Try Again.&quot;</span>   
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+</div>

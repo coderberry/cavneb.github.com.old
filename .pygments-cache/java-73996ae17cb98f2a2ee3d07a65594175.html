@@ -1,0 +1,33 @@
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Count duplicate submissions within 45 days</span>
+<span class="cm"> * SELECT count(l.id)</span>
+<span class="cm"> *      FROM lead AS l, submission AS s, buyerLog as bl</span>
+<span class="cm"> *      WHERE l.id = s.leadId</span>
+<span class="cm"> *          AND s.id = bl.submissionId</span>
+<span class="cm"> *          AND bl.leadBuyer = $buyerName</span>
+<span class="cm"> *          AND l.id != $lead.id</span>
+<span class="cm"> *          AND l.dateCreated::date &gt; $daysAgo</span>
+<span class="cm"> */</span>
+<span class="kd">protected</span> <span class="n">def</span> <span class="n">Boolean</span> <span class="nf">isDuplicateSubmission</span><span class="o">(</span><span class="n">Lead</span> <span class="n">lead</span><span class="o">,</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">buyerNames</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">def</span> <span class="n">isDuplicate</span> <span class="o">=</span> <span class="kc">false</span>
+  <span class="n">def</span> <span class="n">daysAgo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Date</span><span class="o">()</span> <span class="o">-</span> <span class="mi">45</span>
+  <span class="n">def</span> <span class="n">cnt</span> <span class="o">=</span> <span class="n">Lead</span><span class="o">.</span><span class="na">withCriteria</span> <span class="o">{</span>
+    <span class="n">not</span> <span class="o">{</span>
+      <span class="n">idEq</span><span class="o">(</span><span class="n">lead</span><span class="o">.</span><span class="na">id</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="n">and</span> <span class="o">{</span>
+      <span class="n">le</span><span class="o">(</span><span class="err">&#39;</span><span class="n">dateCreated</span><span class="err">&#39;</span><span class="o">,</span> <span class="n">daysAgo</span><span class="o">)</span>
+      <span class="n">submissions</span> <span class="o">{</span>
+        <span class="n">buyerLogs</span> <span class="o">{</span>
+          <span class="n">inList</span><span class="o">(</span><span class="err">&#39;</span><span class="n">leadBuyer</span><span class="err">&#39;</span><span class="o">,</span> <span class="n">buyerNames</span><span class="o">)</span>
+        <span class="o">}</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="n">projections</span> <span class="o">{</span>
+      <span class="n">rowCount</span><span class="o">()</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">return</span> <span class="o">(</span><span class="n">cnt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+<span class="o">}</span>
+</pre>
+</div>

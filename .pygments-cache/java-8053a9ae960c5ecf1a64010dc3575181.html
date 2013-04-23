@@ -1,0 +1,21 @@
+<div class="highlight"><pre><span class="kd">class</span> <span class="nc">Lead</span> <span class="o">{</span>
+  <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">submissions:</span> <span class="n">Submission</span> <span class="o">]</span>
+  <span class="n">Date</span> <span class="n">dateCreated</span>
+  <span class="c1">// ...</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Submission</span> <span class="o">{</span>
+  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">lead:</span> <span class="n">Lead</span> <span class="o">]</span>
+  <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">buyerLogs:</span> <span class="n">BuyerLog</span> <span class="o">]</span>
+  <span class="n">Lead</span> <span class="n">lead</span>
+  <span class="c1">// ...</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">BuyerLog</span> <span class="o">{</span>
+  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span> <span class="nl">submission:</span> <span class="n">Submission</span> <span class="o">]</span>
+  <span class="n">Submission</span> <span class="n">submission</span>
+  <span class="n">String</span> <span class="n">leadBuyer</span>
+  <span class="c1">// ...</span>
+<span class="o">}</span>
+</pre>
+</div>

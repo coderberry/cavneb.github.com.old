@@ -1,0 +1,39 @@
+<div class="highlight"><pre><span class="c1">// PluginPendingApproval.groovy</span>
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
+
+<span class="kd">class</span> <span class="nc">PluginPendingApproval</span> <span class="o">{</span>
+
+  <span class="kd">static</span> <span class="n">hasMany</span> <span class="o">=</span> <span class="o">[</span><span class="nl">pluginPendingApprovalRequests:</span> <span class="n">PluginPendingApprovalRequest</span><span class="o">]</span>
+  
+  <span class="kd">enum</span> <span class="n">ApprovalStatus</span> <span class="o">{</span>
+    <span class="n">PENDING</span><span class="o">,</span> <span class="n">APPROVED</span><span class="o">,</span> <span class="n">REJECTED</span>
+  <span class="o">}</span>
+
+  <span class="n">ApprovalStatus</span> <span class="n">status</span>
+
+  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="c1">// PluginPendingApprovalRequest.groovy</span>
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">example</span>
+
+<span class="kd">class</span> <span class="nc">PluginPendingApprovalRequest</span> <span class="o">{</span>
+
+  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span><span class="nl">pluginPendingApproval:</span> <span class="n">PluginPendingApproval</span><span class="o">]</span>
+  
+  <span class="kd">enum</span> <span class="n">ApprovalStatus</span> <span class="o">{</span>
+    <span class="n">PENDING</span><span class="o">,</span> <span class="n">APPROVED</span><span class="o">,</span> <span class="n">REJECTED</span>
+  <span class="o">}</span>
+
+  <span class="n">ApprovalStatus</span> <span class="n">status</span>
+
+  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">status</span> <span class="nl">blank:</span> <span class="kc">false</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+</div>
